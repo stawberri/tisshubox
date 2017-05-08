@@ -1,0 +1,42 @@
+#tisshubox
+  background $dark
+
+  body
+    display flex
+    flex-flow column
+
+    &::before
+      content ''
+      flex 1 0 0
+
+  .pull
+    @extends $clear-spacing
+    height 30px
+    margin 0 10px
+    text-align center
+    font-weight bold
+    color $dark
+    font-size: 1.5rem
+    line-height @height
+    border-radius 3px 3px 0 0
+    background alpha($bg, 0.69)
+    transition-property background, height, line-height, margin, box-shadow
+    transition-duration 0.69s
+
+    &:hover
+      height 35px
+      line-height @height
+      margin 0 12px
+      background alpha($bg, 0.75)
+      box-shadow 0 0 5px alpha($bg, 0.5)
+      transition-duration 0.2s
+
+    &:active
+      height 40px
+      line-height @height
+      margin 0 15px
+      background alpha($bg, 0.90)
+      border 1px solid $bg
+      border-bottom none
+      box-shadow 0 0 10px alpha($bg, 0.69)
+      transition-duration 0.1s
