@@ -1,13 +1,13 @@
-const {remote} = req('electron')
-let tisshubox = remote.getCurrentWindow()
+const template = require('components/tisshubox')
 
-tisshubox.setTitle('Tisshubox')
-tisshubox.setMenu(null)
-tisshubox.setContentSize(450, 600)
-tisshubox.center()
+module.exports = ({remote}) => {
+  document.documentElement.id = 'tisshubox'
+  let tisshubox = remote.getCurrentWindow()
 
-tisshubox.show()
-tisshubox.webContents.toggleDevTools()
+  tisshubox.setTitle('Tisshubox')
+  tisshubox.setContentSize(450, 600)
+  tisshubox.center()
+  tisshubox.show()
 
-
-let pull = document.querySelector('.pull')
+  return template
+}

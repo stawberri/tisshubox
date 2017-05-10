@@ -1,4 +1,4 @@
-exports = module.exports = {
+module.exports = {
   files: {
     javascripts: {joinTo: 'app.js'},
     stylesheets: {joinTo: 'app.css'}
@@ -11,7 +11,12 @@ exports = module.exports = {
 
   plugins: {
     pug: {
+      pugRuntime: false,
       staticPretty: false
+    },
+
+    vue: {
+      babel: {}
     }
   },
 

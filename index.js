@@ -4,9 +4,9 @@ const path = require('path')
 
 let tisshubox
 app.once('ready', () => {
-  tisshubox = new BrowserWindow({show: false})
+  tisshubox = new BrowserWindow({show: true})
   tisshubox.loadURL(url.format({
     protocol: 'file', slashes: true,
-    pathname: path.join(__dirname, 'renderer', 'tisshubox.html')
+    pathname: path.join(__dirname, 'renderer', 'index.html')
   }))
 })
