@@ -11,8 +11,7 @@ module.exports = {
 
   plugins: {
     pug: {
-      pugRuntime: false,
-      staticPretty: false
+      pugRuntime: false
     },
 
     vue: {

@@ -1,4 +1,7 @@
+const {nativeImage, remote} = req('electron')
 const Danbooru = req('danbooru')
+const path = req('path')
+const fs = req('fs')
 
 module.exports = {
   namespaced: true,
@@ -7,16 +10,50 @@ module.exports = {
     status: 'first',
     post: null,
     progress: {},
-    data: null
+    data: null,
+    postid: 0,
+    path: ''
   },
 
   mutations: {
     post(state, payload) {
-      if(payload.post) state.post = payload.post
+      if(!('post' in payload)) return
+      state.post = payload.post
+      state.postid = payload.post.id
+    },
+
+    path(state, payload) {
+      if(!('path' in payload)) return
+      state.path = payload.path
     },
 
     status(state, payload) {
-      if(payload.status) state.status = payload.status
+      if(!('status' in payload)) return
+      let {status} = payload
+      switch(status) {
+        case 'search':
+          Object.assign(state, {
+            status,
+            post: null,
+            progress: {},
+            data: null,
+            path: ''
+          })
+        break
+
+        case 'download':
+          Object.assign(state, {
+            status,
+            progress: {},
+            data: null,
+            path: ''
+          })
+        break
+
+        case 'done':
+          state.status = status
+        break
+      }
     },
 
     progress(state, payload) {
@@ -32,19 +69,25 @@ module.exports = {
   actions: {
     async fetch(context) {
       status('search')
-      await new Promise(r => setImmediate(r))
-
+      
       let booru = context.rootGetters['credentials/danbooru']
       let post, error, attempts = 5
       let tags = context.rootState.config.tags
       do {
         try {
           let posts = await booru.posts({tags, random: true})
-          post = posts.find(post => {
-            return 'request' in post.file
+          let originalLength = posts.length
+          posts = posts.filter(post => {
+            return (
+              'request' in post.file &&
+              post.id !== context.state.postid &&
+              ~post.file.ext.search(/^jpg|jpeg|jpe|jif|jfif|jfi|png$/)
+            )
           })
-          if(!post) {
-            if(!posts.length) attempts = Math.floor(attempts/2)
+          if(posts.length) {
+            post = posts[Math.floor(Math.random() * posts.length)]
+          } else {
+            if(!originalLength) attempts = Math.floor(attempts/2)
             throw new Error('could not find any posts matching your criteria')
           }
         } catch(err) {
@@ -59,7 +102,17 @@ module.exports = {
       download.data((progress, total) => {
         context.commit('progress', {progress, total})
       })
-      context.commit('data', {data: await download})
+      let data = await download
+      context.commit('data', {data})
+
+      let localPath = path.join(remote.app.getPath('temp'), post.file.name)
+      await new Promise((resolve, reject) => {
+        fs.writeFile(localPath, data, err => {
+          if(err) reject(err)
+          else resolve()
+        })
+      })
+      context.commit('path', {path: localPath})
 
       status('done')
 

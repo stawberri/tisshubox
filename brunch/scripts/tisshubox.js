@@ -1,6 +1,7 @@
+const {remote} = req('electron')
 const template = require('components/tisshubox')
 
-module.exports = ({remote}) => {
+module.exports = () => {
   document.documentElement.id = 'tisshubox'
   let tisshubox = remote.getCurrentWindow()
 
