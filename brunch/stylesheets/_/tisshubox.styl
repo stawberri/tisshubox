@@ -1,5 +1,5 @@
 #tisshubox
-  $tisshu-radius = 3px
+  $tisshu-radius = 10px
 
   background $dark
 
@@ -23,7 +23,7 @@
     @extends $clear-spacing
     order 4
     z-index 4
-    height 30px
+    height 50px
     margin 0 10px
     text-align center
     font-weight bold
@@ -40,20 +40,19 @@
       transition-duration @transition-duration
 
     &:hover
-      height 35px
+      height 55px
       line-height @height
-      margin 5px 12px 0
+      margin 0 12px
       background alpha($bg, 0.75)
       box-shadow 0 0 5px alpha($bg, 0.5)
       transition-duration 0.2s
 
       &~.tisshu
-        transform translateY(0, -15px)
-        opacity 0.69
+        transform translateY(-5px)
         transition-duration @transition-duration
 
     &:active
-      height 40px
+      height 60px
       line-height @height
       margin 10px 15px 0
       background alpha($bg, 0.90)
@@ -63,14 +62,21 @@
       transition-duration 0.1s
 
       &~.tisshu
-        transform translateY(0, -45px)
-        opacity 0.5
+        transform translateY(-20px)
+        opacity 0.69
         transition-duration @transition-duration
 
   .tisshu
+    display flex
+    flex-flow column
     order 2
     z-index 2
-    height calc(100vh - 69px)
+    height calc(100vh - 70px)
     margin 0 10px
     background $bg
     border-radius $tisshu-radius
+    overflow hidden
+
+    #preview
+      flex 1 1 0
+      background center center / cover

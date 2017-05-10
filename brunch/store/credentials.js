@@ -7,7 +7,7 @@ module.exports = {
 
   getters: {
     danbooru() {
-      return new Danbooru()
+      return new Danbooru.Safebooru()
     }
   }
 }

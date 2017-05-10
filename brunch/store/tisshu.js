@@ -11,8 +11,15 @@ module.exports = {
     post: null,
     progress: {},
     data: null,
-    postid: 0,
-    path: ''
+    postid: 0
+  },
+
+  getters: {
+    uri(state) {
+      let image = nativeImage.createFromBuffer(state.data)
+      let uri = image.toDataURL()
+      return uri
+    }
   },
 
   mutations: {
@@ -20,11 +27,6 @@ module.exports = {
       if(!('post' in payload)) return
       state.post = payload.post
       state.postid = payload.post.id
-    },
-
-    path(state, payload) {
-      if(!('path' in payload)) return
-      state.path = payload.path
     },
 
     status(state, payload) {
@@ -36,8 +38,7 @@ module.exports = {
             status,
             post: null,
             progress: {},
-            data: null,
-            path: ''
+            data: null
           })
         break
 
@@ -45,8 +46,7 @@ module.exports = {
           Object.assign(state, {
             status,
             progress: {},
-            data: null,
-            path: ''
+            data: null
           })
         break
 
@@ -69,7 +69,7 @@ module.exports = {
   actions: {
     async fetch(context) {
       status('search')
-      
+
       let booru = context.rootGetters['credentials/danbooru']
       let post, error, attempts = 5
       let tags = context.rootState.config.tags
@@ -104,15 +104,6 @@ module.exports = {
       })
       let data = await download
       context.commit('data', {data})
-
-      let localPath = path.join(remote.app.getPath('temp'), post.file.name)
-      await new Promise((resolve, reject) => {
-        fs.writeFile(localPath, data, err => {
-          if(err) reject(err)
-          else resolve()
-        })
-      })
-      context.commit('path', {path: localPath})
 
       status('done')
 

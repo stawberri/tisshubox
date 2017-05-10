@@ -1,13 +1,13 @@
 <template lang="pug">
   .tisshu
-    img(:src='`file://${path}`')
+    #preview(:style='{backgroundImage: `url(${src})`}')
 </template>
 
 <script>
   module.exports = {
     computed: {
-      path() {
-        return this.$store.state.tisshu.path
+      src() {
+        return this.$store.getters['tisshu/uri']
       }
     }
   }
