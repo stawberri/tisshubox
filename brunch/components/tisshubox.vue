@@ -1,11 +1,17 @@
 <template lang="pug">
-  #vue
+  #tisshubox
     .background(:style='{backgroundImage}')
-    button.pull(@click='loadTisshu')
-      .fa.fa-search(v-if='ready')
-      .fa.fa-spin.fa-refresh(v-else)
-    .tisshu(v-if='ready')
-      #preview(:style='{backgroundImage}')
+    .tisshu(:style='{backgroundImage}')
+    button.pull(@click='pull' :style='{background: c[4], color: c[0]}')
+      template(v-if='this.status === "done"')
+        .fa.fa-search
+        | find another
+      template(v-else-if='status === "search"')
+        .fa.fa-spin.fa-refresh
+        | searching
+      template(v-else-if='status === "download"')
+        .fa.fa-spin.fa-refresh
+        | downloading: {{percent}}%
 </template>
 
 <script>
@@ -19,21 +25,27 @@
         return this.$store.getters['tisshu/uri']
       },
 
-      ready() {
-        return this.status === 'done'
+      backgroundImage() {
+        return this.tisshuSrc ? `url(${this.tisshuSrc})` : ''
       },
 
-      backgroundImage() {
-        return this.ready ? `url(${this.tisshuSrc})` : ''
+      percent() {
+        let {progress, total} = this.$store.state.tisshu.progress
+        if(total === 0) return '0'
+        return (progress * 100 / total).toFixed()
+      },
+
+      c() {
+        return this.$store.state.tisshu.colors
       }
     },
     methods: {
-      loadTisshu() {
-        this.$store.dispatch('tisshu/fetch')
+      pull() {
+        this.$store.dispatch('tisshu/pull')
       }
     },
     mounted() {
-      this.loadTisshu()
+      this.pull()
     }
   }
 </script>

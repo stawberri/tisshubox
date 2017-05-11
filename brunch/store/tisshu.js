@@ -7,8 +7,9 @@ let originalState = () => ({
   status: '',
   post: null,
   postid: 0,
-  progress: {},
+  progress: {progress: 0, total: 0},
   data: null,
+  colors: ['#f4f0f2', '#290d0b', '#f1decd', '#f2bfb1', '#d74e46']
 })
 
 module.exports = {
@@ -18,6 +19,7 @@ module.exports = {
 
   getters: {
     uri(state) {
+      if(!state.data) return ''
       let image = nativeImage.createFromBuffer(state.data)
       let uri = image.toDataURL()
       return uri
@@ -28,20 +30,11 @@ module.exports = {
     status(state, payload) {
       if(!('status' in payload)) return
       let {status} = payload
-      let {post, progress, data, postid} = originalState()
       switch(status) {
-        case '':
         case 'search':
-          Object.assign(state, {status, post, progress, data})
-        break
-
         case 'download':
-          Object.assign(state, {status, progress, data})
-        break
-
         case 'done':
           state.status = status
-        break
       }
     },
 
@@ -58,13 +51,23 @@ module.exports = {
 
     data(state, payload) {
       if(payload.data) state.data = payload.data
+    },
+
+    colors(state, payload) {
+      if(typeof payload.colors !== 'array') return
+      let {colors} = payload.colors
+      colors = colors.slice(0, 5)
+      while(colors.length < 5)
+        colors.push('#' + Math.floor(Math.random() * 0xffffff).toString(16))
+      state.colors = colors
     }
   },
 
   actions: {
-    async fetch(context) {
+    async pull(context) {
       status('search')
 
+      context.commit('progress', {progress: 0, total: 0})
       let booru = context.rootGetters['credentials/danbooru']
       let post, error, attempts = 5
       let tags = context.rootState.config.tags
@@ -99,6 +102,7 @@ module.exports = {
         context.commit('progress', {progress, total})
       })
       let data = await download
+      context.commit('progress', {progress: 1, total: 1})
       context.commit('data', {data})
 
       status('done')
