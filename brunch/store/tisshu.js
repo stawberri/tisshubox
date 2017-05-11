@@ -3,16 +3,18 @@ const Danbooru = req('danbooru')
 const path = req('path')
 const fs = req('fs')
 
+let originalState = () => ({
+  status: '',
+  post: null,
+  postid: 0,
+  progress: {},
+  data: null,
+})
+
 module.exports = {
   namespaced: true,
 
-  state: {
-    status: 'first',
-    post: null,
-    progress: {},
-    data: null,
-    postid: 0
-  },
+  state: originalState(),
 
   getters: {
     uri(state) {
@@ -23,37 +25,29 @@ module.exports = {
   },
 
   mutations: {
-    post(state, payload) {
-      if(!('post' in payload)) return
-      state.post = payload.post
-      state.postid = payload.post.id
-    },
-
     status(state, payload) {
       if(!('status' in payload)) return
       let {status} = payload
+      let {post, progress, data, postid} = originalState()
       switch(status) {
         case 'search':
-          Object.assign(state, {
-            status,
-            post: null,
-            progress: {},
-            data: null
-          })
+          Object.assign(state, {status, post, progress, data})
         break
 
         case 'download':
-          Object.assign(state, {
-            status,
-            progress: {},
-            data: null
-          })
+          Object.assign(state, {status, progress, data})
         break
 
         case 'done':
           state.status = status
         break
       }
+    },
+
+    post(state, payload) {
+      if(!('post' in payload)) return
+      state.post = payload.post
+      state.postid = payload.post.id
     },
 
     progress(state, payload) {

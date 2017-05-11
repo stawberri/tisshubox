@@ -1,8 +1,8 @@
 <template lang="pug">
-  #vue(:class='{hover, active}')
+  #vue
     button.pull(@click='loadTisshu'): span {{status}}
     .tisshu(v-if="status === 'done'")
-      #preview(:style='{backgroundImage: `url(${tisshuSrc})`}')
+      #preview(:style='{backgroundImage}')
 </template>
 
 <script>
@@ -14,12 +14,19 @@
 
       tisshuSrc() {
         return this.$store.getters['tisshu/uri']
+      },
+
+      backgroundImage() {
+        return `url(${this.tisshuSrc})`
       }
     },
     methods: {
       loadTisshu() {
         this.$store.dispatch('tisshu/fetch')
       }
+    },
+    mounted() {
+      this.loadTisshu()
     }
   }
 </script>
