@@ -6,7 +6,7 @@ module.exports = () => {
   let tisshubox = remote.getCurrentWindow()
 
   tisshubox.setTitle('Tisshubox')
-  tisshubox.setContentSize(450, 600)
+  tisshubox.setContentSize(1280, 720)
   tisshubox.center()
 
   return template

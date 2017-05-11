@@ -30,6 +30,7 @@ module.exports = {
       let {status} = payload
       let {post, progress, data, postid} = originalState()
       switch(status) {
+        case '':
         case 'search':
           Object.assign(state, {status, post, progress, data})
         break
@@ -69,7 +70,7 @@ module.exports = {
       let tags = context.rootState.config.tags
       do {
         try {
-          let posts = await booru.posts({tags, random: true})
+          let posts = await booru.posts({tags, random: true, limit: 100})
           let originalLength = posts.length
           posts = posts.filter(post => {
             return (

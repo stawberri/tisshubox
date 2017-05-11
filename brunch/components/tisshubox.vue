@@ -1,7 +1,10 @@
 <template lang="pug">
   #vue
-    button.pull(@click='loadTisshu'): span {{status}}
-    .tisshu(v-if="status === 'done'")
+    .background(:style='{backgroundImage}')
+    button.pull(@click='loadTisshu')
+      .fa.fa-search(v-if='ready')
+      .fa.fa-spin.fa-refresh(v-else)
+    .tisshu(v-if='ready')
       #preview(:style='{backgroundImage}')
 </template>
 
@@ -16,8 +19,12 @@
         return this.$store.getters['tisshu/uri']
       },
 
+      ready() {
+        return this.status === 'done'
+      },
+
       backgroundImage() {
-        return `url(${this.tisshuSrc})`
+        return this.ready ? `url(${this.tisshuSrc})` : ''
       }
     },
     methods: {
