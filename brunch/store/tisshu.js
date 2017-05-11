@@ -98,6 +98,7 @@ module.exports = {
       context.commit('post', {post})
 
       status('download')
+
       let download = post.file.download()
       download.data((progress, total) => {
         context.commit('progress', {progress, total})

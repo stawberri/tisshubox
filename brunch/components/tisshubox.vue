@@ -2,7 +2,7 @@
   #vue(:class='{hover, active}')
     button.pull(@click='loadTisshu'): span {{status}}
     .tisshu(v-if="status === 'done'")
-      #preview(:style='{backgroundImage: `url(${src})`}')
+      #preview(:style='{backgroundImage: `url(${tisshuSrc})`}')
 </template>
 
 <script>
