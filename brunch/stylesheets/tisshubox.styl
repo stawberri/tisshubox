@@ -1,5 +1,6 @@
 #tisshubox
   box-sizing border-box
+  perspective 1000px
   height 100vh
   display flex
   flex-flow column
@@ -21,17 +22,43 @@
   .tisshu
     width 90vw
     flex 1 0 0
-    margin-top 20px
+    margin 20px
     background no-repeat center center / contain
 
-  .pull
+  .buttons
     position absolute
     height 50px
     bottom ((@padding-bottom - @height) / 2)
-    padding 0 50px
-    font-size 1.2rem
-    border none
-    outline none
+    display flex
+    justify-content center
 
-    .fa
-      margin-right 1ch
+    button
+      cursor pointer
+      padding 0 50px
+      margin 0 20px
+      font-size 1.2rem
+      border none
+      outline none
+      transition-property background, color, opacity, transform
+      transition-timing-function cubic-bezier(0, 1.5, 0.5, 1.5)
+      transition-duration 0.69s
+
+      &:hover
+        transform scale(1.05)
+        transition-timing-function ease-out
+        transition-duration 0.2s
+
+      &:active
+        transform scale(0.95) rotateX(30deg)
+        transition-timing-function ease-in
+        transition-duration 0.1s
+
+      &[disabled]
+        opacity 0.69
+        transform scale(0.9)
+        transition-timing-function cubic-bezier(0, 1.2, 1, 1.2)
+        transition-duration 0.42s
+        cursor wait
+
+      .fa
+        margin-right 1ch

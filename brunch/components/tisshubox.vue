@@ -2,16 +2,21 @@
   #tisshubox
     .background(:style='{backgroundImage}')
     .tisshu(:style='{backgroundImage}')
-    button.pull(@click='pull' :style='{background: c[4], color: c[0]}')
-      template(v-if='this.status === "done"')
-        .fa.fa-search
-        | find another
-      template(v-else-if='status === "search"')
-        .fa.fa-spin.fa-refresh
-        | searching
-      template(v-else-if='status === "download"')
-        .fa.fa-spin.fa-refresh
-        | downloading: {{percent}}%
+    .buttons
+      button.pull(
+        @click='pull'
+        :disabled='status !== "done"'
+        :style='{background: c[1], color: c[0], outline: `2px solid ${c[0]}`}'
+      )
+        template(v-if='this.status === "done"')
+          .fa.fa-search
+          | find another
+        template(v-else-if='status === "search"')
+          .fa.fa-spin.fa-refresh
+          | searching
+        template(v-else-if='status === "download"')
+          .fa.fa-spin.fa-refresh
+          | downloading: {{percent}}%
 </template>
 
 <script>

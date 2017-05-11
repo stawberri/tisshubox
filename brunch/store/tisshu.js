@@ -2,20 +2,21 @@ const {nativeImage, remote} = req('electron')
 const Danbooru = req('danbooru')
 const path = req('path')
 const fs = req('fs')
-
-let originalState = () => ({
-  status: '',
-  post: null,
-  postid: 0,
-  progress: {progress: 0, total: 0},
-  data: null,
-  colors: ['#f4f0f2', '#290d0b', '#f1decd', '#f2bfb1', '#d74e46']
-})
+const getImageColors = req('get-image-colors')
+const fileType = require('file-type')
 
 module.exports = {
   namespaced: true,
 
-  state: originalState(),
+  state: {
+    status: '',
+    post: null,
+    postid: 0,
+    progress: {progress: 0, total: 0},
+    data: null,
+    mime: '',
+    colors: ['#f8e9e0', '#894e4b', '#d79e90', '#bd7d6a', '#947c85']
+  },
 
   getters: {
     uri(state) {
@@ -50,12 +51,14 @@ module.exports = {
     },
 
     data(state, payload) {
-      if(payload.data) state.data = payload.data
+      if(!payload.data) return
+      state.data = payload.data
+      state.mime = fileType(payload.data).mime
     },
 
     colors(state, payload) {
-      if(typeof payload.colors !== 'array') return
-      let {colors} = payload.colors
+      let {colors} = payload
+      if(!Array.isArray(colors)) return
       colors = colors.slice(0, 5)
       while(colors.length < 5)
         colors.push('#' + Math.floor(Math.random() * 0xffffff).toString(16))
@@ -70,7 +73,7 @@ module.exports = {
       context.commit('progress', {progress: 0, total: 0})
       let booru = context.rootGetters['credentials/danbooru']
       let post, error, attempts = 5
-      let tags = context.rootState.config.tags
+      let tags = context.rootState.config.searchTags
       do {
         try {
           let posts = await booru.posts({tags, random: true, limit: 100})
@@ -104,8 +107,14 @@ module.exports = {
       let data = await download
       context.commit('progress', {progress: 1, total: 1})
       context.commit('data', {data})
+      context.dispatch('computeColors')
 
       status('done')
+
+      getImageColors(data, context.state.mime).then(colors => {
+        colors = colors.map(color => color.hex())
+        context.commit('colors', {colors})
+      })
 
       function status(status) {
         context.commit('status', {status})
