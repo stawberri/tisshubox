@@ -11,17 +11,25 @@ module.exports = {
   state: {
     status: '',
     post: null,
-    postid: 0,
-    progress: {progress: 0, total: 0},
+    progress: '',
     data: null,
-    mime: '',
     colors: ['#f8e9e0', '#894e4b', '#d79e90', '#bd7d6a', '#947c85']
   },
 
   getters: {
-    uri(state) {
-      if(!state.data) return ''
-      return URL.createObjectURL(new Blob([state.data], {type: state.mime}))
+    get uri() {
+      let lastURL = ''
+      return function(state, getters) {
+        if(!state.data) return ''
+        URL.revokeObjectURL(lastURL)
+        return lastURL = URL.createObjectURL(new Blob(
+          [state.data], {type: getters.mime}
+        ))
+      }
+    },
+
+    mime(state) {
+      return fileType(state.data).mime
     }
   },
 
@@ -40,12 +48,10 @@ module.exports = {
     post(state, payload) {
       if(!('post' in payload)) return
       state.post = payload.post
-      state.postid = payload.post.id
     },
 
     progress(state, payload) {
-      let {progress, total} = payload
-      state.progress = {progress, total}
+      state.progress = payload.progress
     },
 
     data(state, payload) {
@@ -68,7 +74,7 @@ module.exports = {
     async pull(context) {
       status('search')
 
-      context.commit('progress', {progress: 0, total: 0})
+      context.commit('progress', {progress: '0%'})
       let booru = context.rootGetters['credentials/danbooru']
       let post, error, attempts = 5
       let tags = context.rootState.config.searchTags
@@ -76,18 +82,29 @@ module.exports = {
         try {
           let posts = await booru.posts({tags, random: true, limit: 100})
           let originalLength = posts.length
+
+          let currentPostId = 0
+          if(context.state.post) currentPostId = context.state.post.id
+          let currentPost
+
           posts = posts.filter(post => {
-            return (
+            let prelim = (
               'request' in post.file &&
-              post.id !== context.state.postid &&
               ~post.file.ext.search(/^jpg|jpeg|jpe|jif|jfif|jfi|png$/)
             )
+            if(!prelim) return false
+            if(post.id !== currentPostId) return true
+            currentPost = post
+            return false
           })
           if(posts.length) {
             post = posts[Math.floor(Math.random() * posts.length)]
           } else {
-            if(!originalLength) attempts = Math.floor(attempts/2)
-            throw new Error('could not find any posts matching your criteria')
+            if(currentPost) post = currentPost
+            else {
+              if(!originalLength) attempts = Math.floor(attempts/2)
+              throw new Error('could not find any posts matching your criteria')
+            }
           }
         } catch(err) {
           if(--attempts < 0) throw err
@@ -99,17 +116,19 @@ module.exports = {
 
       let download = post.file.download()
       download.data((progress, total) => {
-        context.commit('progress', {progress, total})
+        context.commit('progress', {
+          progress: (100 * progress/total).toFixed() + '%'
+        })
       })
       let data = await download
-      context.commit('progress', {progress: 1, total: 1})
+      context.commit('progress', {progress: '100%'})
 
       status('done')
 
       context.commit('post', {post})
       context.commit('data', {data})
 
-      let colors = await getImageColors(data, context.state.mime)
+      let colors = await getImageColors(data, context.getters.mime)
       colors = colors.map(color => color.hex())
       context.commit('colors', {colors})
 

@@ -26,12 +26,8 @@
           .fa.fa-spin.fa-refresh
           | searching
         template(v-else-if='status === "download"')
-          template(v-if='percent === "100"')
-            .fa.fa-spin.fa-refresh
-            | processing
-          template(v-else)
-            .fa.fa-spin.fa-refresh
-            | downloading: {{percent}}%
+          .fa.fa-spin.fa-refresh
+          | downloading: {{progress}}
 </template>
 
 <script>
@@ -95,10 +91,8 @@
         return tisshu ? `url(${tisshu})` : ''
       },
 
-      percent() {
-        let {progress, total} = this.$store.state.tisshu.progress
-        if(total === 0) return '0'
-        return (progress * 100 / total).toFixed()
+      progress() {
+        return this.$store.state.tisshu.progress
       },
 
       c() {

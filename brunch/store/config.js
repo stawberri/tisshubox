@@ -6,10 +6,8 @@ module.exports = {
   },
 
   mutations: {
-    set(state, payload) {
-      for(let key in payload) {
-        if(key in state) state[key] = payload[key]
-      }
+    tags(state, payload) {
+      if(payload.tags) state.searchTags = payload.tags
     }
   }
 }
