@@ -21,9 +21,7 @@ module.exports = {
   getters: {
     uri(state) {
       if(!state.data) return ''
-      let image = nativeImage.createFromBuffer(state.data)
-      let uri = image.toDataURL()
-      return uri
+      return URL.createObjectURL(new Blob([state.data], {type: state.mime}))
     }
   },
 
@@ -96,7 +94,6 @@ module.exports = {
           post = null
         }
       } while(!post)
-      context.commit('post', {post})
 
       status('download')
 
@@ -106,15 +103,15 @@ module.exports = {
       })
       let data = await download
       context.commit('progress', {progress: 1, total: 1})
-      context.commit('data', {data})
-      context.dispatch('computeColors')
 
       status('done')
 
-      getImageColors(data, context.state.mime).then(colors => {
-        colors = colors.map(color => color.hex())
-        context.commit('colors', {colors})
-      })
+      context.commit('post', {post})
+      context.commit('data', {data})
+
+      let colors = await getImageColors(data, context.state.mime)
+      colors = colors.map(color => color.hex())
+      context.commit('colors', {colors})
 
       function status(status) {
         context.commit('status', {status})
