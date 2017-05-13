@@ -1,36 +1,31 @@
 <template lang="pug">
   #tisshubox
-    .background(:style='{backgroundImage}')
-    .tisshu(:style='{backgroundImage}')
-    .card(
-      v-if='this.title'
-      :style='{background: c[0], color: c[1], border: `3px solid ${c[1]}`}'
-    )
-      .title {{title}}
-      .tags
-        .tag(
-          v-for='tag of tags'
-          :class='tag.type'
-          :style='{color: c[(tag.typeNum + 1) % 5], background: c[tag.typeNum]}'
-        ) {{tag.name}}
-    .buttons
+    .search(:style='{outlineColor: c[0]}')
+      input(
+        v-model='searchTags'
+        :style='{background: chroma(c[1]).alpha(0.69).css(), color: c[0]}'
+        @keydown.enter='pull'
+      )
       button.pull(
         @click='pull'
-        :disabled='status !== "done"'
-        :style='{background: c[1], color: c[0], outline: `2px solid ${c[0]}`}'
+        :style='{background: c[0], color: c[1]}'
       )
         template(v-if='this.status === "done"')
-          .fa.fa-search
-          | find another
-        template(v-else-if='status === "search"')
-          .fa.fa-spin.fa-refresh
-          | searching
-        template(v-else-if='status === "download"')
-          .fa.fa-spin.fa-refresh
-          | downloading: {{progress}}
+          .fa.fa-play
+        template(v-else)
+          .fa.fa-spin.fa-circle-o-notch
+    .background(:style='{backgroundImage}')
+    .tisshu(:style='{backgroundImage}')
+    .title(
+      v-if='this.title'
+      :style='{color: c[0], textShadow: `0 0 5px ${c[2]}`}'
+    ) {{title}}
+    .buttons
 </template>
 
 <script>
+  const chroma = req('chroma-js')
+
   module.exports = {
     computed: {
       title() {
@@ -97,15 +92,30 @@
 
       c() {
         return this.$store.state.tisshu.colors
+      },
+
+      searchTags: {
+        get() {
+          return this.$store.state.config.searchTags
+        },
+
+        set(tags) {
+          this.$store.commit('config/tags', {tags})
+        }
       }
     },
+
     methods: {
-      pull() {
-        this.$store.dispatch('tisshu/pull')
+      chroma,
+
+      pull(force) {
+        if(force || this.status === 'done')
+          this.$store.dispatch('tisshu/pull')
       }
     },
+
     mounted() {
-      this.pull()
+      this.pull(true)
     }
   }
 </script>

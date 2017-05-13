@@ -3,7 +3,7 @@ const Danbooru = req('danbooru')
 const path = req('path')
 const fs = req('fs')
 const getImageColors = req('get-image-colors')
-const fileType = require('file-type')
+const fileType = req('file-type')
 
 module.exports = {
   namespaced: true,
@@ -29,7 +29,9 @@ module.exports = {
     },
 
     mime(state) {
-      return fileType(state.data).mime
+      let type = fileType(state.data)
+      if(type && type.mime) return type.mime
+      else return ''
     }
   },
 
