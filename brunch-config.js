@@ -4,11 +4,6 @@ module.exports = {
     stylesheets: {joinTo: 'app.css'}
   },
 
-  paths: {
-    public: 'renderer',
-    watched: ['brunch']
-  },
-
   plugins: {
     pug: {
       pugRuntime: false
@@ -20,9 +15,6 @@ module.exports = {
   },
 
   modules: {
-    nameCleaner(path) {
-      return path.replace(/^brunch\//, '')
-    },
     autoRequire: {
       'app.js': ['scripts/index']
     }

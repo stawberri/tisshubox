@@ -6,7 +6,7 @@
   "scripts": {
     "pretest": "brunch build",
     "test": "electron .",
-    "prebuild": "rimraf renderer && brunch build --production",
+    "prebuild": "rimraf public && brunch build --production",
     "build": "build"
   },
   "repository": {
