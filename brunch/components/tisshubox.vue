@@ -18,9 +18,17 @@
     .tisshu(:style='{backgroundImage}')
     .title(
       v-if='this.title'
-      :style='{color: c[0], textShadow: `0 0 5px ${c[2]}`}'
+      :style='{textShadow: `0 0 5px ${c[2]}`}'
     ) {{title}}
     .buttons
+      button.stash(:style='{background: c[0], color: c[1]}')
+        | Stash (not implemented)
+      button.stash(:style='{background: c[0], color: c[1]}')
+        | Set Wallpaper (not implemented)
+      button.pull(
+        @click='pull'
+        :style='{background: c[0], color: c[1]}'
+      ) Find another
 </template>
 
 <script>
