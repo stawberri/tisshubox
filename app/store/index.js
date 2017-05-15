@@ -3,5 +3,8 @@ const Vuex = require('vuex')
 Vue.use(Vuex)
 
 module.exports = new Vuex.Store({
-  modules: {}
+  plugins: [
+    require('./storage'),
+    require('./posts')
+  ]
 })
