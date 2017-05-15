@@ -27,7 +27,7 @@
       "!brunch-config.js"
     ],
     "win": {
-      "target": "zip"
+      "target": "dir"
     },
     "asar": true
   },
