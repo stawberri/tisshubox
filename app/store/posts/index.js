@@ -12,8 +12,12 @@ module.exports = store => {
         return state.tisshus[state.tisshuIndex]
       },
 
-      queueIds(state) {
-        return state.queue.map(post => post.id)
+      tisshuIds({tisshus}) {
+        return tisshus.map(post => post.id)
+      },
+
+      queueIds({queue}) {
+        return queue.map(post => +post.id)
       }
     },
 

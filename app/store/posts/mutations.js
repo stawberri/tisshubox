@@ -34,7 +34,11 @@ module.exports = {
       index = state.tisshus.find(tisshu => tisshu.id === +id)
     if(!~index) return
 
+    let {download, url} = state.tisshus[index]
     state.tisshus.splice(index, 1)
+    if(download && typeof download.abort === 'function') download.abort()
+    if(url) URL.revokeObjectURL(url)
+
     if(state.tisshuIndex > index) state.tisshuIndex--
     else if(state.tisshuIndex === state.tisshus.length)
       state.tisshuIndex = 0

@@ -26,7 +26,7 @@ module.exports = {
       for(let post of posts) {
         if(!('request' in post.file)) continue
 
-        if(!initial && !getters.queueIds.includes(post.id))
+        if(!initial && !getters.queueIds.includes(+post.id))
           commit('add', {post})
         else queuePosts.push(post)
         postsFound++
@@ -38,28 +38,43 @@ module.exports = {
     if(!postsFound) throw new Error('no posts found')
   },
 
-  async process({state, commit}) {
+  async process({state, commit, getters}) {
     let tasks = state.tisshus.filter(tisshu => !tisshu.process)
 
     await Promise.all(tasks.map(task => new Promise(async (resolve, reject) => {
       let {id, post} = task
-      commit('edit', {id, data: {process: true}})
+      let url
+      try {
+        commit('edit', {id, data: {process: true}})
 
-      await new Promise(r => setTimeout(r, Math.random() * 3000))
+        let data = [], attempts = 3
+        do {
+          let {download} = await staggerDownload(post)
+          commit('edit', {id, data: {download}})
+          download.data((part, total) => {
+            commit('edit', {id, data: {progress: {part, total}}})
+          })
+          data = await download
+        } while(!data.length && attempts--)
+        if(!data.length) throw new Error('unable to download')
+        let type = fileType(data).mime
+        commit('edit', {id, data: {data, type, download: null}})
 
-      let {download} = await staggerDownload(post)
-      download.data((part, total) => {
-        commit('edit', {id, data: {progress: {part, total}}})
-      })
-      let data = await download
-      let type = fileType(data).mime
-      let colors = getImageColors(data, type)
-      let url = URL.createObjectURL(new Blob([data], {type}))
+        let colors = getImageColors(data, type)
+        url = URL.createObjectURL(new Blob([data], {type}))
+        colors = await colors
+        
+        commit('edit', {id, data: {data, type, colors, url}})
+        if(!getters.tisshuIds.includes(id)) throw new Error('cancelled')
 
-      colors = await colors
-      commit('edit', {id, data: {data, type, colors, url}})
-
-      resolve()
+        resolve()
+      } catch(error) {
+        if(getters.tisshuIds.includes(id)) {
+          commit('edit', {id, data: {error: error}})
+        } else {
+          if(url) URL.revokeObjectURL(url)
+        }
+      }
     })))
   }
 }
@@ -67,8 +82,8 @@ module.exports = {
 let staggerDownloadTime = 0
 async function staggerDownload(post) {
   let now = Date.now()
+  staggerDownloadTime += 500
   if(staggerDownloadTime < now) staggerDownloadTime = now
-  staggerDownloadTime += 500 + Math.random() * 1000
   await new Promise(resolve => setTimeout(resolve, staggerDownloadTime - now))
   return {download: post.file.download()}
 }

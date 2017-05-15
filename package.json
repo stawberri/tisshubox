@@ -27,7 +27,7 @@
       "!brunch-config.js"
     ],
     "win": {
-      "target": "dir"
+      "target": "portable"
     },
     "asar": true
   },
