@@ -114,8 +114,8 @@ module.exports = store => {
       },
 
       async fetch({rootState, commit, getters, rootGetters}, {initial}) {
-        let booru = rootGetters['storage/booru/']
-        let {searches} = rootState.storage.booru
+        let booru = rootGetters['data/booru/']
+        let {searches} = rootState.data.booru
         let postsFound = 0
 
         let arrays = await Promise.all(searches.map(search => new Promise(async (resolve, reject) => {

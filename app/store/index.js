@@ -4,7 +4,7 @@ Vue.use(Vuex)
 
 module.exports = new Vuex.Store({
   plugins: [
-    require('./storage'),
+    require('./data'),
     require('./posts')
   ]
 })

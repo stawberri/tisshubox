@@ -1,5 +1,5 @@
 module.exports = store => {
-  store.registerModule('storage', {
+  store.registerModule('data', {
     namespaced: true,
 
     modules: {
