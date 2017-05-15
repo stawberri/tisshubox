@@ -7,8 +7,9 @@ module.exports = {
       if(!state.queue.length) await dispatch('fetch')
       commit('add', {post: state.queue[0]})
       commit('dequeue')
+      dispatch('process')
+      await new Promise(resolve => setTimeout(resolve, 500))
     }
-    dispatch('process')
   },
 
   async fetch({rootState, commit, getters, rootGetters}, {initial}) {
@@ -17,9 +18,7 @@ module.exports = {
     let postsFound = 0
 
     let arrays = await Promise.all(searches.map(search => new Promise(async (resolve, reject) => {
-      let posts = await booru.posts(Object.assign({
-        limit: 100
-      }, search))
+      let posts = await booru.posts(Object.assign({limit: 100}, search))
       posts.sort()
 
       let queuePosts = []
@@ -63,7 +62,7 @@ module.exports = {
         let colors = getImageColors(data, type)
         url = URL.createObjectURL(new Blob([data], {type}))
         colors = await colors
-        
+
         commit('edit', {id, data: {data, type, colors, url}})
         if(!getters.tisshuIds.includes(id)) throw new Error('cancelled')
 
@@ -82,7 +81,7 @@ module.exports = {
 let staggerDownloadTime = 0
 async function staggerDownload(post) {
   let now = Date.now()
-  staggerDownloadTime += 500
+  staggerDownloadTime += 300
   if(staggerDownloadTime < now) staggerDownloadTime = now
   await new Promise(resolve => setTimeout(resolve, staggerDownloadTime - now))
   return {download: post.file.download()}
