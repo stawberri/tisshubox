@@ -18,7 +18,6 @@ module.exports = store => {
     },
 
     mutations: require('./mutations'),
-
     actions: require('./actions')
   })
 }
