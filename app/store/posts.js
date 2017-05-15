@@ -49,13 +49,22 @@ module.exports = store => {
 
       delete(state, {id} = {}) {
         let index = state.tisshuIndex
-        if(typeof id !== 'undefined') index = state.tisshus.find(t => t.id === id)
+        if(typeof id !== 'undefined')
+          index = state.tisshus.find(tisshu => tisshu.id === +id)
         if(!~index) return
 
         state.tisshus.splice(index, 1)
         if(state.tisshuIndex > index) state.tisshuIndex--
         else if(state.tisshuIndex === state.tisshus.length)
           state.tisshuIndex = 0
+      },
+
+      edit(state, {id, data}) {
+        id = +id
+        let index = state.tisshus.findIndex(tisshu => tisshu.id === id)
+        state.tisshus.splice(index, 1, Object.assign(
+          {}, state.tisshus[index], data, {id}
+        ))
       },
 
       enqueue({queue}, {arrays}) {
@@ -65,12 +74,12 @@ module.exports = store => {
           let endOfQueue = index === queue.length
           if(!endOfQueue) {
             biggest = -1
-            value = queue[index].id
+            value = +queue[index].id
           }
 
           arrays = arrays.filter(array => array.length)
           for(let current = 0; current < arrays.length; current++) {
-            let {id} = arrays[current][0]
+            let id = +arrays[current][0].id
             if(id >= value || biggest === -2) {
               biggest = current
               value = id
@@ -80,7 +89,7 @@ module.exports = store => {
           if(biggest === -1) index++
           else queue.splice(
             index,
-            +(!endOfQueue && value === queue[index].id),
+            +(!endOfQueue && value === +queue[index].id),
             arrays[biggest].shift()
           )
         }
@@ -88,7 +97,8 @@ module.exports = store => {
 
       dequeue({queue}, {id} = {}) {
         let index = 0
-        if(typeof id !== 'undefined') index = queue.find(t => t.id === id)
+        if(typeof id !== 'undefined')
+          index = queue.find(post => post.id === '' + id)
         if(~index) return queue.splice(index, 1)
       }
     },
@@ -100,40 +110,52 @@ module.exports = store => {
           commit('add', {post: state.queue[0]})
           commit('dequeue')
         }
+        dispatch('download')
       },
 
-      async fetch({
-        rootState, commit, getters, rootGetters
-      }, {
-        initial
-      }) {
+      async fetch({rootState, commit, getters, rootGetters}, {initial}) {
         let booru = rootGetters['storage/booru/']
         let {searches} = rootState.storage.booru
-        let promises = []
         let postsFound = 0
 
-        for(let search of searches) {
-          promises.push(new Promise(async (resolve, reject) => {
-            let posts = await booru.posts(Object.assign({
-              limit: 100
-            }, search))
-            posts.sort()
+        let arrays = await Promise.all(searches.map(search => new Promise(async (resolve, reject) => {
+          let posts = await booru.posts(Object.assign({
+            limit: 100
+          }, search))
+          posts.sort()
 
-            let queuePosts = []
-            for(let post of posts) {
-              if(!('request' in post.file)) continue
+          let queuePosts = []
+          for(let post of posts) {
+            if(!('request' in post.file)) continue
 
-              if(!initial && !getters.queueIds.includes(post.id))
-                commit('add', {post})
-              else queuePosts.push(post)
-              postsFound++
-            }
-            resolve(queuePosts)
-          }))
-        }
+            if(!initial && !getters.queueIds.includes(post.id))
+              commit('add', {post})
+            else queuePosts.push(post)
+            postsFound++
+          }
+          resolve(queuePosts)
+        })))
 
-        commit('enqueue', {arrays: await Promise.all(promises)})
+        commit('enqueue', {arrays})
         if(!postsFound) throw new Error('no posts found')
+      },
+
+      async download({state, commit}) {
+        let tasks = state.tisshus.filter(tisshu => !tisshu.download)
+
+        await Promise.all(tasks.map(task => new Promise(async (resolve, reject) => {
+          let {id, post} = task
+          commit('edit', {id, data: {download: true}})
+
+          let download = post.file.download()
+          download.data((part, total) => {
+            commit('edit', {id, data: {progress: {part, total}}})
+          })
+          let data = await download
+          commit('edit', {id, data: {data}})
+
+          resolve()
+        })))
       }
     }
   })
