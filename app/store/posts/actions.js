@@ -12,7 +12,7 @@ module.exports = {
     }
   },
 
-  async fetch({rootState, commit, getters, rootGetters}, {queueOnly}) {
+  async fetch({rootState, commit, getters, rootGetters}, {queueOnly} = {}) {
     let booru = rootGetters['data/booru/']
     let {searches} = rootState.data.booru
     let postsFound = 0
