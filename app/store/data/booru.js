@@ -7,7 +7,7 @@ module.exports = {
     safebooru: true,
     searches: [
       {
-        tags: 'order:rank',
+        tags: 'score:5..',
         random: false
       }
     ]

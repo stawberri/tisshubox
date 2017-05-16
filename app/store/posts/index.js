@@ -8,10 +8,6 @@ module.exports = store => {
     },
 
     getters: {
-      tisshu(state) {
-        return state.tisshus[state.tisshuIndex]
-      },
-
       tisshuIds({tisshus}) {
         return tisshus.map(post => post.id)
       },

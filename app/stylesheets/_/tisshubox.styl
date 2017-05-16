@@ -1,0 +1,45 @@
+#tisshubox
+  $flip-animation-duration = 0.69s
+
+  display flex
+  flex-flow column
+  height 100vh
+  transition-property background
+  transition-duration $flip-animation-duration
+
+  .tisshu
+    flex 1
+    min-width 0
+    min-height 0
+    display flex
+    justify-content center
+    align-items center
+    margin 10px
+
+    .picture
+      background no-repeat 50% 50% / contain
+      max-width 100%
+      max-height 100%
+
+    .message
+      flex 1
+      display flex
+      flex-flow column
+      align-items center
+      text-align center
+
+      .icon
+        flex 2
+        display flex
+        align-items flex-end
+        font-size 5rem
+        color $c1
+
+      .text
+        flex 3
+        font-size 1.5rem
+        margin 1em 0 auto
+        color $c4
+
+        .secondary
+          color $c3

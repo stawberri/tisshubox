@@ -21,17 +21,13 @@ function makeTisshubox() {
     width: 1280, height: 720,
     useContentSize: true,
     title: 'Tisshubox',
+    backgroundColor: '#f8e9e0',
     webPreferences: {devTools: global.debug}
   })
   tisshubox.loadURL(`file://${__dirname}/public/index.html`)
   tisshubox.once('closed', () => {
     tisshubox = null
     if(process.platform !== 'darwin') app.quit()
-  })
-  tisshubox.on('page-title-updated', (event, title) => {
-    event.preventDefault()
-    if(title) tisshubox.setTitle(`${title} — Tisshubox`)
-    else tisshubox.setTitle(`Tisshubox`)
   })
 }
 

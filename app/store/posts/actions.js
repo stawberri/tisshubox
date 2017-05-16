@@ -19,7 +19,7 @@ module.exports = {
 
     let arrays = await Promise.all(searches.map(search => new Promise(async (resolve, reject) => {
       let posts = await booru.posts(Object.assign({limit: 100}, search))
-      posts.sort()
+      posts.sort((a, b) => +b.id - +a.id)
 
       let queuePosts = []
       for(let post of posts) {
