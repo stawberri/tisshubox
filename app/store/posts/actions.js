@@ -12,7 +12,7 @@ module.exports = {
     }
   },
 
-  async fetch({rootState, commit, getters, rootGetters}, {initial}) {
+  async fetch({rootState, commit, getters, rootGetters}, {queueOnly}) {
     let booru = rootGetters['data/booru/']
     let {searches} = rootState.data.booru
     let postsFound = 0
@@ -25,7 +25,7 @@ module.exports = {
       for(let post of posts) {
         if(!('request' in post.file)) continue
 
-        if(!initial && !getters.queueIds.includes(+post.id))
+        if(!queueOnly && !getters.queueIds.includes(+post.id))
           commit('add', {post})
         else queuePosts.push(post)
         postsFound++
