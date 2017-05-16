@@ -1,17 +1,22 @@
 <template lang='pug'>
 .tisshu
   .picture(v-if='tisshu.url' :style='pictureStyle')
+  .message(v-else-if='error')
+    .icon: .fa.fa-exclamation-triangle
+    .text
+      .primary error encountered
+      .secondary {{error}}
   .message(v-else-if='tisshu.data')
     .icon: .fa.fa-circle-o-notch.fa-spin
     .text processing image
-  .message(v-else-if='tisshu.progress')
+  .message(v-else-if='percent')
     .icon: .fa.fa-refresh.fa-spin
     .text
       .primary {{percent}}
       .secondary downloading
   .message(v-else)
     .icon: .fa.fa-cog.fa-spin
-    .text preparing download
+    .text beginning download
 </template>
 
 <script>
@@ -31,9 +36,16 @@ module.exports = {
     },
 
     percent() {
-      let {part, total} = this.tisshu.progress
-      let percent = (part * 100 / total).toFixed(2)
-      return `${percent}%`
+      let {progress} = this.tisshu
+      if(!progress) return
+      let {part, total} = progress
+      return (part * 100 / total).toFixed(2) + '%'
+    },
+
+    error() {
+      let {error} = this.tisshu
+      if(!error) return
+      return error.message
     }
   }
 }

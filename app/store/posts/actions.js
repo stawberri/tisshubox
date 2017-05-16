@@ -81,7 +81,7 @@ module.exports = {
         resolve()
       } catch(error) {
         if(getters.tisshuIds.includes(id)) {
-          commit('edit', {id, data: {error: error}})
+          commit('edit', {id, data: {error}})
         } else {
           if(url) URL.revokeObjectURL(url)
         }
