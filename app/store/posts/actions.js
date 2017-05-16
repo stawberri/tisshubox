@@ -23,11 +23,22 @@ module.exports = {
 
       let queuePosts = []
       for(let post of posts) {
-        if(!('request' in post.file)) continue
+        switch(true) {
+          case !('request' in post.file):
+          case !~post.file.ext.search(/^jpg|jpeg|jpe|jif|jfif|jfi|png$/):
+            continue
+          break
+        }
 
-        if(!queueOnly && !getters.queueIds.includes(+post.id))
-          commit('add', {post})
-        else queuePosts.push(post)
+        switch(true) {
+          case (!queueOnly && !getters.queueIds.includes(+post.id)):
+            commit('add', {post})
+          break
+
+          default:
+            queuePosts.push(post)
+          break
+        }
         postsFound++
       }
       resolve(queuePosts)
@@ -50,9 +61,10 @@ module.exports = {
         do {
           let {download} = await staggerDownload(post)
           commit('edit', {id, data: {download}})
-          download.data((part, total) => {
+          let progressThrottle
+          download.data((part, total) =>
             commit('edit', {id, data: {progress: {part, total}}})
-          })
+          )
           data = await download
         } while(!data.length && attempts--)
         if(!data.length) throw new Error('unable to download')
