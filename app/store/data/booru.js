@@ -8,7 +8,7 @@ module.exports = {
     searches: [
       {
         tags: 'score:5..',
-        random: false
+        random: ''
       }
     ]
   },

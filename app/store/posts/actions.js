@@ -5,7 +5,7 @@ module.exports = {
   async populate({state, commit, dispatch}) {
     while(state.tisshus.length < 9) {
       if(!state.queue.length) await dispatch('fetch')
-      commit('add', {post: state.queue[0]})
+      commit('add', {post: state.queue[0], noAlert: true})
       commit('dequeue')
       dispatch('process')
       await new Promise(resolve => setTimeout(resolve, 500))
@@ -31,6 +31,7 @@ module.exports = {
         }
 
         switch(true) {
+          case getters.tisshuIds.includes(+post.id):
           case (!queueOnly && !getters.queueIds.includes(+post.id)):
             commit('add', {post})
           break

@@ -1,5 +1,5 @@
 module.exports = {
-  add(state, {post}) {
+  add(state, {post, noAlert}) {
     let id = +post.id
     let index = state.tisshus.findIndex(tisshu => tisshu.id === id)
     if(~index) return state.tisshus[index].post = post
@@ -11,21 +11,24 @@ module.exports = {
       index++
     );
 
-    state.tisshus.splice(index, 0, {id, post})
+    state.tisshus.splice(index, 0, {id, post, noAlert})
     if(state.tisshus.length === 1) state.tisshuIndex = 0
     else if(index <= state.tisshuIndex) state.tisshuIndex++
+    state.tisshus[state.tisshuIndex].seen = true
   },
 
   next(state) {
     if(!state.tisshus.length) return
     let {tisshuIndex: i, tisshus: t} = state
     state.tisshuIndex = ++i % t.length
+    state.tisshus[state.tisshuIndex].seen = true
   },
 
   prev(state) {
     if(!state.tisshus.length) return
     let {tisshuIndex: i, tisshus: t} = state
     state.tisshuIndex = (--i + t.length) % t.length
+    state.tisshus[state.tisshuIndex].seen = true
   },
 
   delete(state, {id} = {}) {
@@ -42,6 +45,7 @@ module.exports = {
     if(state.tisshuIndex > index) state.tisshuIndex--
     else if(state.tisshuIndex === state.tisshus.length)
       state.tisshuIndex = 0
+    state.tisshus[state.tisshuIndex].seen = true
   },
 
   edit(state, {id, data}) {

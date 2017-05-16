@@ -1,0 +1,59 @@
+.buttons
+  display flex
+  justify-content center
+  align-items center
+  font-size 2em
+  margin 5px 0 15px
+  color #fff
+  perspective 500px
+
+  $button
+    transition-property text-shadow, transform, color
+    transition-duration $flip-animation-duration
+    padding 10px
+
+    &:hover
+      transition-duration 0.2s
+
+    &:active
+      transition-duration 0.1s
+
+  .prev
+    @extend #tisshubox .buttons $button
+
+    &:hover
+      transform translateX(-5px)
+
+    &:active
+      transform translateX(-5px) scale(0.95)
+
+  .stash
+    @extend #tisshubox .buttons $button
+    position relative
+    bottom 6px
+
+    &:hover
+      transform translateY(-5px)
+
+    &:active
+      transform translateY(-5px) scale(0.95)
+
+  .trash
+    @extend #tisshubox .buttons $button
+    position relative
+    top 6px
+
+    &:hover
+      transform translateY(5px)
+
+    &:active
+      transform translateY(5px) scale(0.95)
+
+  .next
+    @extend #tisshubox .buttons $button
+
+    &:hover
+      transform translateX(5px)
+
+    &:active
+      transform translateX(5px) scale(0.95)

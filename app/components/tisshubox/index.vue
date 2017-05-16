@@ -1,6 +1,7 @@
-<template lang="pug">
+<template lang='pug'>
 #tisshubox(:style='{background: c[0]}')
-  tisshu(v-if='tisshu' :tisshu='tisshu')
+  tisshu(:tisshu='tisshu || {}')
+  buttons(:c='c' @press='handleButton')
 </template>
 
 <script>
@@ -56,13 +57,49 @@ module.exports = {
     }
   },
 
+  methods: {
+    handleButton(button) {
+      switch(button) {
+        case 'prev':
+          this.prev()
+        break
+        case 'stash':
+          this.stash()
+        break
+        case 'trash':
+          this.trash()
+        break
+        case 'next':
+          this.next()
+        break
+      }
+    },
+
+    prev() {
+      this.$store.commit('posts/prev')
+    },
+
+    stash() {
+
+    },
+
+    trash() {
+
+    },
+
+    next() {
+      this.$store.commit('posts/next')
+    }
+  },
+
   async mounted() {
     await this.$store.dispatch('posts/fetch', {queueOnly: true})
     await this.$store.dispatch('posts/populate')
   },
 
   components: {
-    tisshu: require('./tisshu')
+    tisshu: require('./tisshu'),
+    buttons: require('./buttons')
   }
 }
 </script>
