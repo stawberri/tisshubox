@@ -2,7 +2,7 @@ let Danbooru = req('danbooru')
 
 module.exports = {
   namespaced: true,
-  state: {
+  state: () => ({
     auth: {},
     safebooru: true,
     searches: [
@@ -11,7 +11,7 @@ module.exports = {
         random: ''
       }
     ]
-  },
+  }),
 
   getters: {
     [''](state) {

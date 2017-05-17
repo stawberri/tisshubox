@@ -1,9 +1,9 @@
 module.exports = {
   namespaced: true,
-  state: {
+  state: () => ({
     posts: [],
     tags: {}
-  },
+  }),
 
   mutations: {
     post(state, {post}) {

@@ -1,11 +1,11 @@
 module.exports = store => {
   store.registerModule('posts', {
     namespaced: true,
-    state: {
+    state: () => ({
       tisshuIndex: 0,
       tisshus: [],
       queue: []
-    },
+    }),
 
     getters: {
       tisshuIds({tisshus}) {
