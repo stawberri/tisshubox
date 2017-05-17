@@ -1,6 +1,11 @@
 <template lang='pug'>
 #tisshubox(:style='{background: c[0]}')
-  tisshu(:tisshu='tisshu || {}')
+  .tisshuframe: transition(
+    :name='animation'
+    :mode='animMode'
+    @after-leave='defaultColor = false'
+  ): .wrapper(:key='animKey')
+    tisshu(:tisshu='tisshu || {}')
   buttons(:c='c' @press='handleButton')
 </template>
 
@@ -9,6 +14,13 @@ const {remote} = req('electron')
 const chroma = req('chroma-js')
 
 module.exports = {
+  data: () => ({
+    animation: 'left',
+    animating: false,
+    animKey: false,
+    defaultColor: false
+  }),
+
   computed: {
     tisshus() {
       let tisshus = this.$store.state.posts.tisshus.slice()
@@ -40,7 +52,7 @@ module.exports = {
         chroma(0x947c85)
       ]
 
-      if(this.tisshu && this.tisshu.colors)
+      if(!this.defaultColor && this.tisshu && this.tisshu.colors)
         colors = this.tisshu.colors.slice()
 
       colors.sort((a, b) =>
@@ -48,6 +60,19 @@ module.exports = {
       )
 
       return colors
+    },
+
+    animMode() {
+      switch(this.animation) {
+        // case 'up':
+        // case 'down':
+        //   return 'out-in'
+        // break
+
+        default:
+          return ''
+        break
+      }
     }
   },
 
@@ -76,18 +101,28 @@ module.exports = {
     },
 
     prev() {
+      this.animation = 'right'
+      this.animKey = !this.animKey
       this.$store.commit('posts/prev')
     },
 
     stash() {
-
+      this.animation = 'up'
+      this.animKey = !this.animKey
+      this.defaultColor = true
+      this.$store.commit('posts/next')
     },
 
     trash() {
-
+      this.animation = 'down'
+      this.animKey = !this.animKey
+      this.defaultColor = true
+      this.$store.commit('posts/next')
     },
 
     next() {
+      this.animation = 'left'
+      this.animKey = !this.animKey
       this.$store.commit('posts/next')
     }
   },

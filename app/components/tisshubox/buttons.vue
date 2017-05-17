@@ -59,7 +59,7 @@ module.exports = {
 
           case (states[button].hover):
             styles[button] = {
-              textShadow: `0 0 10px ${this.c[3]}`
+              textShadow: `0 0 15px ${this.c[3]}`
             }
           break
 

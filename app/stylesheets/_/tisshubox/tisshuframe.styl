@@ -1,0 +1,59 @@
+.tisshuframe
+  flex 1
+  position relative
+
+  > .wrapper
+    position absolute
+    margin 10px
+    width 'calc(100% - %s)' % (@margin * 2)
+    height @width
+    display flex
+    overflow hidden
+
+    &.left-enter-active:not(.left-enter)
+    &.left-leave-active:not(.left-leave)
+    &.right-enter-active:not(.right-enter)
+    &.right-leave-active:not(.right-leave)
+      &
+      .tisshu
+        transition-property transform
+        transition-duration @transition-duration
+
+    &.up-enter-active:not(.up-enter)
+    &.up-leave-active:not(.up-leave)
+    &.down-enter-active:not(.down-enter)
+    &.down-leave-active:not(.down-leave)
+      &
+      .tisshu
+        transition-property transform, filter
+        transition-duration (@transition-duration * 0.69)
+
+    &.up-enter-active:not(.up-enter)
+    &.down-enter-active:not(.down-enter)
+      &
+      .tisshu
+        transition-delay (@transition-duration * 0.69)
+
+    &.up-enter
+    &.down-enter
+    &.left-enter
+    &.right-leave-to
+      transform translateX(100vw)
+
+      .tisshu
+        transform translateX(-20vw)
+
+    &.right-enter
+    &.left-leave-to
+      transform translateX(-100vw)
+
+      .tisshu
+        transform translateX(20vw)
+
+    &.up-leave-to
+      transform translateY(-120vh) scale(1.1)
+      filter brightness(150%) saturate(120%)
+
+    &.down-leave-to
+      transform translateY(20vh) scale(0.9)
+      filter opacity(0%) grayscale(95%)
