@@ -7,7 +7,7 @@
 
   .page
     padding 0 5px
-    transition-property color, opacity
+    transition-property color, opacity, transform
     transition-duration @transition-duration
 
     &:not(.current)
@@ -24,7 +24,3 @@
 
     &.page-leave-active
       position absolute
-
-    &.page-move
-      transition-property transform
-      transition-duration @transition-duration
