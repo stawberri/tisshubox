@@ -34,6 +34,7 @@ module.exports = {
           case getters.tisshuIds.includes(+post.id):
           case (!queueOnly && !getters.queueIds.includes(+post.id)):
             commit('add', {post})
+            dispatch('process')
           break
 
           default:
