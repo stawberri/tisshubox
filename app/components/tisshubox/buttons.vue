@@ -44,30 +44,55 @@ module.exports = {
   props: ['c'],
 
   computed: {
+    length() {
+      return this.$store.getters['posts/tisshus'].length
+    },
+
     styles() {
       let styles = {}
       let states = this.states
 
       for(let button in states) {
-        switch(true) {
-          case (states[button].active):
-            styles[button] = {
-              color: this.c[3],
-              textShadow: `0 0 5px ${this.c[3]}`
-            }
+        let display
+        switch(button) {
+          case 'prev':
+          case 'next':
+            display = this.length > 1
           break
 
-          case (states[button].hover):
-            styles[button] = {
-              textShadow: `0 0 15px ${this.c[3]}`
-            }
+          case 'stash':
+          case 'trash':
+            display = !!this.length
           break
+        }
 
-          default:
-            styles[button] = {
-              textShadow: `0 0 10px ${this.c[4]}`
-            }
-          break
+        styles[button] = {}
+        if(display) {
+          switch(true) {
+            case (states[button].active):
+              Object.assign(styles[button], {
+                color: this.c[3],
+                textShadow: `0 0 5px ${this.c[3]}`
+              })
+            break
+
+            case (states[button].hover):
+              Object.assign(styles[button], {
+                textShadow: `0 0 15px ${this.c[3]}`
+              })
+            break
+
+            default:
+              Object.assign(styles[button], {
+                textShadow: `0 0 10px ${this.c[4]}`
+              })
+            break
+          }
+        } else {
+          Object.assign(styles[button], {
+            opacity: 0.3,
+            pointerEvents: 'none'
+          })
         }
       }
 

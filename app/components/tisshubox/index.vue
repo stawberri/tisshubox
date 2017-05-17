@@ -74,12 +74,14 @@ module.exports = {
     },
 
     prev() {
+      if(this.$store.getters['posts/tisshus'].length < 2) return
       this.animation = 'right'
       this.animKey = !this.animKey
       this.$store.commit('posts/prev')
     },
 
     stash() {
+      if(!this.tisshu) return
       this.animation = 'up'
       this.animKey = !this.animKey
       this.defaultColor = true
@@ -87,6 +89,7 @@ module.exports = {
     },
 
     trash() {
+      if(!this.tisshu) return
       this.animation = 'down'
       this.animKey = !this.animKey
       this.defaultColor = true
@@ -94,6 +97,7 @@ module.exports = {
     },
 
     next() {
+      if(this.$store.getters['posts/tisshus'].length < 2) return
       this.animation = 'left'
       this.animKey = !this.animKey
       this.$store.commit('posts/next')
