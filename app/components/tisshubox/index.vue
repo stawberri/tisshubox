@@ -23,7 +23,8 @@ module.exports = {
 
   computed: {
     tisshu() {
-      let {tisshus, tisshuIndex} = this.$store.state.posts
+      let {tisshuIndex} = this.$store.state.posts
+      let tisshus = this.$store.getters['posts/tisshus']
       return tisshus[tisshuIndex]
     },
 

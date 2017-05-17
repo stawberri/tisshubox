@@ -1,12 +1,12 @@
 <template lang='pug'>
 .tisshu
-  .picture(v-if='tisshu.url' :style='pictureStyle')
+  .picture(v-if='tisshu.ready' :style='pictureStyle')
   .message(v-else-if='error')
     .icon: .fa.fa-exclamation-triangle
     .text
       .primary error encountered
       .secondary {{error}}
-  .message(v-else-if='tisshu.data')
+  .message(v-else-if='tisshu.url')
     .icon: .fa.fa-circle-o-notch.fa-spin
     .text processing image
   .message(v-else-if='percent')

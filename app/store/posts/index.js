@@ -1,3 +1,5 @@
+const chroma = req('chroma-js')
+
 module.exports = store => {
   store.registerModule('posts', {
     namespaced: true,
@@ -8,6 +10,17 @@ module.exports = store => {
     }),
 
     getters: {
+      tisshus({tisshus}) {
+        return tisshus.map(src => {
+          let tisshu = Object.assign({}, src)
+
+          if(src.colors && src.colors.map)
+            tisshu.colors = src.colors.map(color => chroma(color))
+
+          return tisshu
+        })
+      },
+
       tisshuIds({tisshus}) {
         return tisshus.map(post => post.id)
       },

@@ -20,7 +20,8 @@ module.exports = {
   computed: {
     tisshus() {
       let mod = this
-      let {tisshus, tisshuIndex} = this.$store.state.posts
+      let {tisshuIndex} = this.$store.state.posts
+      let tisshus = this.$store.getters['posts/tisshus']
       tisshus = tisshus.map((tisshu, index) => ({
         id: tisshu.id,
         get c() {
@@ -50,10 +51,6 @@ module.exports = {
         }
       }
       return styles
-    },
-
-    current() {
-      return this.$store.state.posts.tisshuIndex
     }
   }
 }

@@ -51,7 +51,7 @@ module.exports = {
     if(!postsFound) throw new Error('no posts found')
   },
 
-  async process({state, commit, getters}) {
+  async process({state, commit, dispatch, getters}) {
     let tasks = state.tisshus.filter(tisshu => !tisshu.process)
 
     await Promise.all(tasks.map(task => new Promise(async (resolve, reject) => {
@@ -71,20 +71,12 @@ module.exports = {
           data = await download
         } while(!data.length && attempts--)
         if(!data.length) throw new Error('unable to download')
-        let type = fileType(data).mime
-        commit('edit', {id, data: {data, type, download: null}})
 
-        let colors = getImageColors(data, type)
-        url = URL.createObjectURL(new Blob([data], {type}))
-        colors = await colors
+        url = URL.createObjectURL(new Blob([data]))
+        commit('edit', {id, data: {download: null, url}})
+        dispatch('workers/task', {task: {require: 'processImage', id, url}}, {root: true})
 
-        colors.sort((a, b) =>
-          chroma.contrast(a, '#fff') - chroma.contrast(b, '#fff')
-        )
-
-        commit('edit', {id, data: {data, type, colors, url}})
         if(!getters.tisshuIds.includes(id)) throw new Error('cancelled')
-
         resolve()
       } catch(error) {
         if(getters.tisshuIds.includes(id)) {

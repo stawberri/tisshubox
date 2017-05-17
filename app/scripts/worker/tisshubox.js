@@ -3,14 +3,20 @@ const tisshubox = remote.getGlobal('tisshubox')
 const tisshuboxContents = tisshubox.webContents
 const webContents = remote.getCurrentWebContents()
 
-module.exports = {
+const emptyQueue = Symbol('empty queue')
+exports = module.exports = {
+  emptyQueue,
+
   poll() {
     return new Promise((resolve, reject) => {
-      ipcRenderer.once('task', task => {
-        if(typeof task === undefined) reject(new Error('empty queue'))
-        else resolve(task)
+      ipcRenderer.once('task', (event, task) => {
+        if(typeof task === 'undefined') {
+          let error = new Error('empty task queue')
+          error.emptyQueue = emptyQueue
+          reject(error)
+        } else resolve(task)
       })
-      tisshuboxContents.send('request-task', webContents)
+      tisshuboxContents.send('request-task', webContents.id)
     })
   },
 
@@ -23,6 +29,7 @@ module.exports = {
   },
 
   log(...args) {
-    tisshuboxContents.send('console-log', ...args)
+    if(process.env.NODE_ENV !== 'production')
+      tisshuboxContents.send('console-log', ...args)
   }
 }

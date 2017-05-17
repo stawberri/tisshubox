@@ -27,7 +27,7 @@ module.exports = store => {
 
         let url = new URL(window.location)
         url.hash = 'worker'
-        win.loadURL(url)
+        win.loadURL('' + url)
       }
     },
 
@@ -49,19 +49,22 @@ module.exports = store => {
     }
   })
 
-  ipcRenderer.on('request-task', (event, worker) => {
+  ipcRenderer.on('request-task', (event, workerId) => {
+    let worker = remote.webContents.fromId(workerId)
     store.dispatch('workers/issue', {worker})
   })
 
-  ipcRenderer.on('vuex-commit', (event, ...args) => {
+  ipcRenderer.on('vuex-commit', (event, ...args) =>
     store.commit(...args)
-  })
+  )
 
-  ipcRenderer.on('vuex-dispatch', (event, ...args) => {
+  ipcRenderer.on('vuex-dispatch', (event, ...args) =>
     store.dispatch(...args)
-  })
+  )
 
-  ipcRenderer.on('console-log', (event, ...args) => {
-    console.log('[Worker]', ...args)
-  })
+  if(process.env.NODE_ENV !== 'production') {
+    ipcRenderer.on('console-log', (event, ...args) =>
+      console.log('[Worker]', ...args)
+    )
+  }
 }
