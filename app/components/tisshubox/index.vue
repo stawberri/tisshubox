@@ -1,8 +1,8 @@
 <template lang='pug'>
 #tisshubox(:style='{background: c[0]}')
+  pagebar(:c='c')
   .tisshuframe: transition(
     :name='animation'
-    :mode='animMode'
     @after-leave='defaultColor = false'
   ): .wrapper(:key='animKey')
     tisshu(:tisshu='tisshu || {}')
@@ -45,19 +45,6 @@ module.exports = {
         chroma(0xbd7d6a),
         chroma(0x947c85)
       ]
-    },
-
-    animMode() {
-      switch(this.animation) {
-        // case 'up':
-        // case 'down':
-        //   return 'out-in'
-        // break
-
-        default:
-          return ''
-        break
-      }
     }
   },
 
@@ -118,6 +105,7 @@ module.exports = {
   },
 
   components: {
+    pagebar: require('./pagebar'),
     tisshu: require('./tisshu'),
     buttons: require('./buttons')
   }
