@@ -1,5 +1,6 @@
-let fileType = req('file-type')
-let getImageColors = req('get-image-colors')
+const fileType = req('file-type')
+const getImageColors = req('get-image-colors')
+const chroma = req('chroma-js')
 
 module.exports = {
   async populate({state, commit, dispatch}) {
@@ -76,6 +77,10 @@ module.exports = {
         let colors = getImageColors(data, type)
         url = URL.createObjectURL(new Blob([data], {type}))
         colors = await colors
+
+        colors.sort((a, b) =>
+          chroma.contrast(a, '#fff') - chroma.contrast(b, '#fff')
+        )
 
         commit('edit', {id, data: {data, type, colors, url}})
         if(!getters.tisshuIds.includes(id)) throw new Error('cancelled')

@@ -1,4 +1,4 @@
-let Danbooru = req('danbooru')
+const Danbooru = req('danbooru')
 
 module.exports = {
   namespaced: true,

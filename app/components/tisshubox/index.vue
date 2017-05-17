@@ -44,22 +44,15 @@ module.exports = {
     },
 
     c() {
-      let colors = [
+      if(!this.defaultColor && this.tisshu && this.tisshu.colors)
+        return this.tisshu.colors
+      else return [
         chroma(0xf8e9e0),
         chroma(0x894e4b),
         chroma(0xd79e90),
         chroma(0xbd7d6a),
         chroma(0x947c85)
       ]
-
-      if(!this.defaultColor && this.tisshu && this.tisshu.colors)
-        colors = this.tisshu.colors.slice()
-
-      colors.sort((a, b) =>
-        chroma.contrast(a, '#fff') - chroma.contrast(b, '#fff')
-      )
-
-      return colors
     },
 
     animMode() {
