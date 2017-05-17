@@ -22,17 +22,9 @@ module.exports = {
   }),
 
   computed: {
-    tisshus() {
-      let tisshus = this.$store.state.posts.tisshus.slice()
-
-      tisshus.index = this.$store.state.posts.tisshuIndex
-      tisshus.current = tisshus[tisshus.index]
-
-      return tisshus
-    },
-
     tisshu() {
-      return this.tisshus.current
+      let {tisshus, tisshuIndex} = this.$store.state.posts
+      return tisshus[tisshuIndex]
     },
 
     title() {
