@@ -45,7 +45,7 @@ module.exports = {
 
   computed: {
     length() {
-      return this.$store.getters['posts/tisshus'].length
+      return this.$store.state.posts.tisshus.length
     },
 
     styles() {

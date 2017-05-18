@@ -35,7 +35,7 @@ module.exports = {
     tisshus() {
       let mod = this
       let {tisshuIndex} = this.$store.state.posts
-      let tisshus = this.$store.getters['posts/tisshus']
+      let {tisshus} = this.$store.state.posts
       tisshus = tisshus.map((tisshu, index) => ({
         id: tisshu.id,
         get c() {

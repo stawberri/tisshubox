@@ -15,7 +15,7 @@ module.exports = async (tisshubox, {id, url}) => {
     )
     colors = colors.map(color => color.hex())
 
-    tisshubox.commit('posts/edit', {id, data: {
+    tisshubox.dispatch('posts/processResults', {id, data: {
       ready: true,
       type,
       colors

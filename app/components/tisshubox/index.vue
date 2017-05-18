@@ -30,7 +30,7 @@ module.exports = {
   computed: {
     tisshu() {
       let {tisshuIndex} = this.$store.state.posts
-      let tisshus = this.$store.getters['posts/tisshus']
+      let {tisshus} = this.$store.state.posts
       return tisshus[tisshuIndex]
     },
 
@@ -84,9 +84,9 @@ module.exports = {
     },
 
     prev() {
-      if(this.$store.getters['posts/tisshus'].length < 2) return
+      if(this.$store.state.posts.tisshus.length < 2) return
       this.animation = 'right'
-      this.$store.commit('posts/prev')
+      this.$store.commit('posts/go', {offset: -1})
     },
 
     stash() {
@@ -106,9 +106,9 @@ module.exports = {
     },
 
     next() {
-      if(this.$store.getters['posts/tisshus'].length < 2) return
+      if(this.$store.state.posts.tisshus.length < 2) return
       this.animation = 'left'
-      this.$store.commit('posts/next')
+      this.$store.commit('posts/go')
     },
 
     jump(id) {

@@ -11,30 +11,53 @@ module.exports = {
       index++
     );
 
-    state.tisshus.splice(index, 0, {id, post, noAlert})
+    state.tisshus.splice(index, 0, {
+      id, post,
+      noAlert,
+      process: false,
+      download: null,
+      progress: null,
+      url: '',
+      error: null,
+      ready: false,
+      type: '',
+      colors: null,
+      seen: false
+    })
+
     if(state.tisshus.length === 1) state.tisshuIndex = 0
     else if(index <= state.tisshuIndex) state.tisshuIndex++
     state.tisshus[state.tisshuIndex].seen = true
   },
 
-  next(state) {
-    if(!state.tisshus.length) return
-    let {tisshuIndex: i, tisshus: t} = state
-    state.tisshuIndex = ++i % t.length
-    state.tisshus[state.tisshuIndex].seen = true
-  },
+  go(state, options = {}) {
+    let length = state.tisshus.length
+    if(!length) return state.tisshuIndex = 0
 
-  prev(state) {
-    if(!state.tisshus.length) return
-    let {tisshuIndex: i, tisshus: t} = state
-    state.tisshuIndex = (--i + t.length) % t.length
-    state.tisshus[state.tisshuIndex].seen = true
-  },
+    let index = state.tisshuIndex
+    switch(true) {
+      case ('offset' in options):
+        index += options.offset
+      break
 
-  go(state, {index = -1, id}) {
-    if(!~index) index = state.tisshus.findIndex(tisshu => tisshu.id === +id)
-    if(!~index) return
+      case ('id' in options):
+        index = state.tisshus.findIndex(tisshu => tisshu.id === +options.id)
+        if(!~index) throw new Error('invalid id')
+      break
+
+      case ('index' in options):
+        index = options.index
+      break
+
+      default:
+        index++
+      break
+    }
+
+    index = (index % length + length) % length
+
     state.tisshuIndex = index
+    state.tisshus[index].seen = true
   },
 
   delete(state, {id} = {}) {
@@ -52,17 +75,23 @@ module.exports = {
     else if(state.tisshuIndex === state.tisshus.length)
       state.tisshuIndex = 0
 
-    if(state.tisshus.length)
-      state.tisshus[state.tisshuIndex].seen = true
+    if(state.tisshus.length) state.tisshus[state.tisshuIndex].seen = true
   },
 
   edit(state, {id, data}) {
     id = +id
-    let index = state.tisshus.findIndex(tisshu => tisshu.id === id)
-    if(!~index) return
-    state.tisshus.splice(index, 1, Object.assign(
-      {}, state.tisshus[index], data, {id}
-    ))
+    let tisshu = state.tisshus.find(tisshu => tisshu.id === id)
+    if(!tisshu) return
+
+    for(let key in data) {
+      if(key === 'id' && data.id !== tisshu.id)
+        throw new Error("can't change post id")
+      else if(key in tisshu)
+        tisshu[key] = data[key]
+      else {
+        throw new Error(`invalid key ${key}`)
+      }
+    }
   },
 
   enqueue({queue}, {arrays}) {

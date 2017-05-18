@@ -89,6 +89,11 @@ module.exports = {
         }
       }
     })))
+  },
+
+  processResults({commit}, {id, data}) {
+    data.colors = data.colors.map(color => chroma(color))
+    commit('edit', {id, data})
   }
 }
 
