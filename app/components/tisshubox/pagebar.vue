@@ -34,18 +34,17 @@ module.exports = {
 
     tisshus() {
       let mod = this
-      let {tisshuIndex} = this.$store.state.posts
-      let {tisshus} = this.$store.state.posts
-      tisshus = tisshus.map((tisshu, index) => ({
-        id: tisshu.id,
-        get c() {
-          if(tisshu.colors) return tisshu.colors
-          else return mod.c
-        },
-        current: index === tisshuIndex,
-        dummy: false,
-        ready: tisshu.ready
-      }))
+      let {tisshus, tisshuIndex} = this.$store.state.posts
+      tisshus = tisshus.map((tisshu, index) => Object.assign(
+        Object.create(tisshu),
+        {
+          get c() {
+            return tisshu.colors || mod.c
+          },
+          current: index === tisshuIndex,
+          dummy: false
+        }
+      ))
 
       let after = tisshus.length - tisshuIndex - 1
       let difference = Math.abs(tisshuIndex - after)
