@@ -31,6 +31,12 @@ module.exports = {
     state.tisshus[state.tisshuIndex].seen = true
   },
 
+  go(state, {index = -1, id}) {
+    if(!~index) index = state.tisshus.findIndex(tisshu => tisshu.id === +id)
+    if(!~index) return
+    state.tisshuIndex = index
+  },
+
   delete(state, {id} = {}) {
     let index = state.tisshuIndex
     if(typeof id !== 'undefined')

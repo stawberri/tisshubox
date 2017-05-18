@@ -60,3 +60,28 @@
       transform translateY(20vh) scale(0.9)
       filter brightness(0.15)
       opacity 0
+
+    &.fade-enter
+    &.fade-left-enter
+    &.fade-right-enter
+    &.fade-leave-to
+    &.fade-left-leave-to
+    &.fade-right-leave-to
+      opacity 0
+
+    &.fade-left-enter
+    &.fade-right-leave-to
+      transform translateX(10vw)
+
+    &.fade-right-enter
+    &.fade-left-leave-to
+      transform translateX(-10vw)
+
+    &.fade-enter-active
+    &.fade-leave-active
+    &.fade-left-enter-active
+    &.fade-left-leave-active
+    &.fade-right-enter-active
+    &.fade-right-leave-active
+      transition-property opacity, transform
+      transition-duration @transition-duration

@@ -8,6 +8,7 @@ transition-group.pagebar(
     :key='tisshu.id'
     :style='pageStyle[tisshu.id]'
     :class='{current: tisshu.current, dummy: tisshu.dummy}'
+    @click='$emit("jump", tisshu.id)'
   )
     .fa.fa-circle(v-if='tisshu.current')
     .fa.fa-circle-o(v-else)

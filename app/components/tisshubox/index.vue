@@ -1,12 +1,12 @@
 <template lang='pug'>
 #tisshubox(:style='{background: c[0]}')
-  pagebar(:c='c')
+  pagebar(:c='c' @jump='jump')
   .tisshuframe: transition(
     :name='animation'
     @after-leave='defaultColor = false'
-    @after-enter='animation = ""'
+    @after-enter='animation = "fade"'
   )
-    .wrapper(:key='animKey' v-if='tisshu')
+    .wrapper(:key='tisshu.id' v-if='tisshu')
       tisshu(:tisshu='tisshu')
   buttons(:c='c' @press='handleButton')
 </template>
@@ -17,8 +17,7 @@ const chroma = req('chroma-js')
 
 module.exports = {
   data: () => ({
-    animation: '',
-    animating: false,
+    animation: 'fade',
     animKey: false,
     defaultColor: false
   }),
@@ -103,6 +102,17 @@ module.exports = {
       this.animation = 'left'
       this.animKey = !this.animKey
       this.$store.commit('posts/next')
+    },
+
+    jump(id) {
+      let {tisshuIndex} = this.$store.state.posts
+      let ids = this.$store.getters['posts/tisshuIds']
+      let newIndex = ids.indexOf(id)
+      if(~newIndex) {
+        if(newIndex > tisshuIndex) this.animation = 'fade-left'
+        else this.animation = 'fade-right'
+      }
+      this.$store.commit('posts/go', {id})
     }
   },
 
