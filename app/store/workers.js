@@ -18,11 +18,14 @@ module.exports = store => {
       },
 
       worker(state) {
-        let workers = state.workers.filter(win => !win.isDestroyed())
+        let workers = state.workers.filter(win =>
+          remote.BrowserWindow.fromId(win) &&
+          !remote.BrowserWindow.fromId(win).isDestroyed()
+        )
 
         if(workers.length >= 4) return
         let win = new remote.BrowserWindow({show: false})
-        workers.push(win)
+        workers.push(win.id)
         state.workers = workers
 
         let url = new URL(window.location)
