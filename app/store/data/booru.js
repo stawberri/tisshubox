@@ -14,7 +14,7 @@ module.exports = {
   }),
 
   getters: {
-    [''](state) {
+    ''(state) {
       if(state.safebooru)
         return new Danbooru.Safebooru(state.auth)
       else

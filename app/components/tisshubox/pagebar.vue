@@ -1,6 +1,6 @@
 <template lang='pug'>
 transition-group.pagebar(
-  name='page'
+  :name='animation'
   tag='div'
 )
   .page(
@@ -16,9 +16,22 @@ transition-group.pagebar(
 
 <script>
 module.exports = {
-  props: ['c'],
+  props: ['c', 'outerAnim'],
 
   computed: {
+    animation() {
+      switch(this.outerAnim) {
+        case 'up':
+        case 'down':
+          return `page-${this.outerAnim}`
+        break
+
+        default:
+          return 'page'
+        break
+      }
+    },
+
     tisshus() {
       let mod = this
       let {tisshuIndex} = this.$store.state.posts

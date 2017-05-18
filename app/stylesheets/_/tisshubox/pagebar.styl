@@ -21,7 +21,30 @@
       font-size 0.9em
 
     &.page-enter
+    &.page-leave-to
+    &.page-up-enter
+    &.page-up-leave-to
+    &.page-down-enter
+    &.page-down-leave-to
       opacity 0
 
     &.page-leave-active
+    &.page-up-leave-active
+    &.page-down-leave-active
       position absolute
+
+    &.page-up-leave-active
+    &.page-down-leave-active
+    &.page-up-move
+    &.page-down-move
+      transition-duration $vertical-duration
+
+    &.page-up-move
+    &.page-down-move
+      transition-delay $vertical-duration
+
+    &.page-up-leave-to
+      transform translateY(-10px)
+
+    &.page-down-leave-to
+      transform translateY(10px)

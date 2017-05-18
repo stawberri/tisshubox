@@ -27,13 +27,13 @@
       &
       .tisshu
         transition-property transform, filter, opacity
-        transition-duration (@transition-duration * 0.69)
+        transition-duration $vertical-duration
 
     &.up-enter-active:not(.up-enter)
     &.down-enter-active:not(.down-enter)
       &
       .tisshu
-        transition-delay (@transition-duration * 0.69)
+        transition-delay $vertical-duration
 
     &.up-enter
     &.down-enter
