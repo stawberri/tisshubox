@@ -4,8 +4,10 @@
   .tisshuframe: transition(
     :name='animation'
     @after-leave='defaultColor = false'
-  ): .wrapper(:key='animKey')
-    tisshu(:tisshu='tisshu || {}')
+    @after-enter='animation = ""'
+  )
+    .wrapper(:key='animKey' v-if='tisshu')
+      tisshu(:tisshu='tisshu')
   buttons(:c='c' @press='handleButton')
 </template>
 
@@ -15,7 +17,7 @@ const chroma = req('chroma-js')
 
 module.exports = {
   data: () => ({
-    animation: 'left',
+    animation: '',
     animating: false,
     animKey: false,
     defaultColor: false
@@ -85,7 +87,7 @@ module.exports = {
       this.animation = 'up'
       this.animKey = !this.animKey
       this.defaultColor = true
-      this.$store.commit('posts/next')
+      this.$store.commit('posts/delete')
     },
 
     trash() {
@@ -93,7 +95,7 @@ module.exports = {
       this.animation = 'down'
       this.animKey = !this.animKey
       this.defaultColor = true
-      this.$store.commit('posts/next')
+      this.$store.commit('posts/delete')
     },
 
     next() {

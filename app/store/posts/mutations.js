@@ -45,7 +45,9 @@ module.exports = {
     if(state.tisshuIndex > index) state.tisshuIndex--
     else if(state.tisshuIndex === state.tisshus.length)
       state.tisshuIndex = 0
-    state.tisshus[state.tisshuIndex].seen = true
+
+    if(state.tisshus.length)
+      state.tisshus[state.tisshuIndex].seen = true
   },
 
   edit(state, {id, data}) {
