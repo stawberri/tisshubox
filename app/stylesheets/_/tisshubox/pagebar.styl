@@ -10,9 +10,20 @@
     transition-property color, opacity, transform
     transition-duration @transition-duration
 
-    &:not(.current)
-      opacity 0.5
+    &:not(.current) .fa
+      opacity 0.42
       cursor pointer
+      transition-property opacity, transform
+      transition-duration @transition-duration
+
+      &:hover
+        opacity 0.69
+        transition-duration 0.2s
+
+      &:active
+        opacity 1
+        transform scale(0.69)
+        transition-duration 0.1s
 
     &.dummy
       visibility hidden

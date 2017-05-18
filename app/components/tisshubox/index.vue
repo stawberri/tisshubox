@@ -94,6 +94,7 @@ module.exports = {
       this.animation = 'up'
       this.defaultColor = true
       this.$store.commit('posts/delete')
+      this.$store.dispatch('posts/populate')
     },
 
     trash() {
@@ -101,6 +102,7 @@ module.exports = {
       this.animation = 'down'
       this.defaultColor = true
       this.$store.commit('posts/delete')
+      this.$store.dispatch('posts/populate')
     },
 
     next() {

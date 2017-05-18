@@ -10,7 +10,7 @@ transition-group.pagebar(
     :class='{current: tisshu.current, dummy: tisshu.dummy}'
     @click='$emit("jump", tisshu.id)'
   )
-    .fa.fa-circle(v-if='tisshu.current')
+    .fa.fa-circle(v-if='tisshu.ready')
     .fa.fa-circle-o(v-else)
 </template>
 
@@ -43,7 +43,8 @@ module.exports = {
           else return mod.c
         },
         current: index === tisshuIndex,
-        dummy: false
+        dummy: false,
+        ready: tisshu.ready
       }))
 
       let after = tisshus.length - tisshuIndex - 1
