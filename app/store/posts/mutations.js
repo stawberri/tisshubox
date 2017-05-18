@@ -59,6 +59,7 @@ module.exports = {
   edit(state, {id, data}) {
     id = +id
     let index = state.tisshus.findIndex(tisshu => tisshu.id === id)
+    if(!~index) return
     state.tisshus.splice(index, 1, Object.assign(
       {}, state.tisshus[index], data, {id}
     ))
