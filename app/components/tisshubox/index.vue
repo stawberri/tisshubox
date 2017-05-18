@@ -8,6 +8,8 @@
   )
     .wrapper(:key='tisshu.id' v-if='tisshu')
       tisshu(:tisshu='tisshu')
+    .wrapper(key='error' v-else-if='started && !queueLength')
+      tisshu(:tisshu='noPosts')
   buttons(:c='c' @press='handleButton')
 </template>
 
@@ -19,7 +21,11 @@ module.exports = {
   data: () => ({
     animation: 'fade',
     animKey: false,
-    defaultColor: false
+    defaultColor: false,
+    started: false,
+    noPosts: {
+      error: new Error('no posts found')
+    }
   }),
 
   computed: {
@@ -47,6 +53,10 @@ module.exports = {
         chroma(0xbd7d6a),
         chroma(0x947c85)
       ]
+    },
+
+    queueLength() {
+      return this.$store.state.posts.queue.length
     }
   },
 
@@ -117,8 +127,13 @@ module.exports = {
   },
 
   async mounted() {
-    await this.$store.dispatch('posts/fetch', {queueOnly: true})
-    await this.$store.dispatch('posts/populate')
+    try {
+      await this.$store.dispatch('posts/fetch', {queueOnly: true})
+      await this.$store.dispatch('posts/populate')
+    } catch(err) {
+      console.error(err)
+    }
+    this.started = true
   },
 
   components: {
