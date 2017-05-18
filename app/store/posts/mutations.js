@@ -97,5 +97,10 @@ module.exports = {
     if(typeof id !== 'undefined')
       index = queue.find(post => post.id === '' + id)
     if(~index) return queue.splice(index, 1)
+  },
+
+  populating(state, {value} = {}) {
+    if(typeof value === 'undefined') value = !state.populating
+    state.populating = value
   }
 }

@@ -4,13 +4,16 @@ const chroma = req('chroma-js')
 
 module.exports = {
   async populate({state, commit, dispatch}) {
+    if(state.populating) return
+    commit('populating', {value: true})
     while(state.tisshus.length < 9) {
       if(!state.queue.length) await dispatch('fetch')
       commit('add', {post: state.queue[0], noAlert: true})
       commit('dequeue')
       dispatch('process')
-      await new Promise(resolve => setTimeout(resolve, 500))
+      await new Promise(resolve => setTimeout(resolve, 690))
     }
+    commit('populating', {value: false})
   },
 
   async fetch({rootState, commit, getters, rootGetters}, {queueOnly} = {}) {

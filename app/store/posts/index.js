@@ -6,7 +6,8 @@ module.exports = store => {
     state: () => ({
       tisshuIndex: 0,
       tisshus: [],
-      queue: []
+      queue: [],
+      populating: false,
     }),
 
     getters: {
