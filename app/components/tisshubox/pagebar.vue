@@ -6,12 +6,14 @@ transition-group.pagebar(
   .page(
     v-for='tisshu of tisshus'
     :key='tisshu.id'
-    :style='pageStyle[tisshu.id]'
-    :class='{current: tisshu.current, dummy: tisshu.dummy}'
-    @click='$emit("jump", tisshu.id)'
   )
-    .fa.fa-circle(v-if='tisshu.ready')
-    .fa.fa-circle-o(v-else)
+    .contents(
+      @click='$emit("jump", tisshu.id)'
+      :style='tisshu.style'
+      :class='{current: tisshu.current}'
+    )
+      .fa.fa-circle(v-if='tisshu.ready')
+      .fa.fa-circle-o(v-else)
 </template>
 
 <script>
@@ -33,38 +35,30 @@ module.exports = {
     },
 
     tisshus() {
-      let mod = this
       let {tisshus, tisshuIndex} = this.$store.state.posts
-      tisshus = tisshus.map((tisshu, index) => Object.assign(
-        Object.create(tisshu),
-        {
-          get c() {
-            return tisshu.colors || mod.c
-          },
-          current: index === tisshuIndex,
-          dummy: false
-        }
-      ))
+      tisshus = tisshus.map((tisshu, index) => {
+        let color = tisshu.colors || this.c
+        let current = index === tisshuIndex
+        return Object.assign(
+          Object.create(tisshu),
+          {
+            current,
+            style: {
+              color: color[current ? 4 : 2]
+            }
+          }
+        )
+      })
 
       let after = tisshus.length - tisshuIndex - 1
       let difference = Math.abs(tisshuIndex - after)
       let filler = Array(difference).fill('').map((element, index) => ({
         id: `filler-${index}`,
-        dummy: true
+        style: {visibility: 'hidden'}
       }))
 
       if(tisshuIndex > after) return [...tisshus, ...filler]
       else return [...filler, ...tisshus]
-    },
-
-    pageStyle() {
-      let styles = {}
-      for(let tisshu of this.tisshus) {
-        styles[tisshu.id] = tisshu.dummy ? {} : {
-          color: tisshu.c[tisshu.current ? 4 : 2]
-        }
-      }
-      return styles
     }
   }
 }

@@ -1,23 +1,24 @@
 .pagebar
-  margin 7px 0 -3px
   display flex
   justify-content center
+  margin 7px 0 -3px
   font-size 0.8rem
   z-index 100
 
-  .page
-    padding 0 5px
+  .contents
+    display flex
+    justify-content center
+    width 25px
     transition-property color, opacity, transform
     transition-duration @transition-duration
 
-    &:not(.current) .fa
-      opacity 0.42
+    &:not(.current)
+      opacity 0.3
       cursor pointer
-      transition-property opacity, transform
-      transition-duration @transition-duration
 
       &:hover
-        opacity 0.69
+        opacity 0.9
+        transform scale(1.2)
         transition-duration 0.2s
 
       &:active
@@ -25,37 +26,27 @@
         transform scale(0.69)
         transition-duration 0.1s
 
-    &.dummy
-      visibility hidden
+  .page
+    transition-property opacity, transform, filter
+    transition-duration @transition-duration
 
-    .fa-circle-o-notch
-      font-size 0.9em
+  .page-leave-active
+  .page-up-leave-active
+  .page-down-leave-active
+    position absolute
 
-    &.page-enter
-    &.page-leave-to
-    &.page-up-enter
-    &.page-up-leave-to
-    &.page-down-enter
-    &.page-down-leave-to
-      opacity 0
+  .page-up-leave-to
+    transform translateY(-30px) scale(1.1)
+    filter brightness(4)
 
-    &.page-leave-active
-    &.page-up-leave-active
-    &.page-down-leave-active
-      position absolute
+  .page-down-leave-to
+    transform translateY(30px) scale(0.9)
+    filter brightness(0.25)
 
-    &.page-up-leave-active
-    &.page-down-leave-active
-    &.page-up-move
-    &.page-down-move
-      transition-duration $vertical-duration
-
-    &.page-up-move
-    &.page-down-move
-      transition-delay $vertical-duration
-
-    &.page-up-leave-to
-      transform translateY(-10px)
-
-    &.page-down-leave-to
-      transform translateY(10px)
+  .page-enter
+  .page-up-enter
+  .page-down-enter
+  .page-leave-to
+  .page-up-leave-to
+  .page-down-leave-to
+    opacity 0
