@@ -26,11 +26,10 @@ module.exports = {
 
   async fetch(
     {state, rootState, commit, dispatch, getters, rootGetters},
-    {queueOnly, recursive, tryPage, runningOutCheck} = {}
+    {queueOnly, recursive, tryPage} = {}
   ) {
     recursive = recursive === fetchRecursive
     if(state.fetching && !recursive) return
-    if(runningOutCheck && state.queue.length > 30) return
     commit('flag', {fetching: true})
 
     let booru = rootGetters['data/booru/']
@@ -91,7 +90,7 @@ module.exports = {
       } else if(!state.fetchedLastPage) commit('incrementRecursiveFetchPage')
     } else {
       if(newPosts && state.recursiveFetchPage > 2) await fetch({tryPage: 2})
-      if(!state.fetchedLastPage) await fetch({queueOnly: true, runningOutCheck: true})
+      while(!state.fetchedLastPage && !getters.queueHasEnough) await fetch({queueOnly: true})
       commit('flag', {fetching: false})
       dispatch('populate')
     }

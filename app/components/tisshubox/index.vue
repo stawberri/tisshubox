@@ -30,11 +30,27 @@ module.exports = {
     },
 
     title() {
-      if(!this.tisshu || !this.tisshu.post) return ''
-      let artists = this.tisshu.post.tags.artist.join(', ')
-      artists = artists.replace(/_/g, ' ')
-      if(artists) return `Drawn by ${artists}`
-      else return 'Artist unknown'
+      let package = this.$store.state.package
+      if(package.github && package.local.version !== package.github.version)
+        return `Tisshubox v${package.local.version} — UPDATE AVAILABLE. PLEASE CHECK GITHUB FOR A NEWER VERSION.`
+
+      let title = ''
+
+      if(this.tisshu  && this.tisshu.post) {
+        let artists = this.tisshu.post.tags.artist.join(', ')
+        artists = artists.replace(/_/g, ' ')
+        if(artists) title += `Drawn by ${artists}`
+      }
+
+      let hasTitle
+      if(title) {
+        hasTitle = true
+        title += ' — '
+      }
+      title += `Tisshubox v${package.local.version}`
+      if(!hasTitle) title += ` — ${package.local.description}`
+
+      return title
     },
 
     c() {
@@ -65,6 +81,10 @@ module.exports = {
 
     tisshuLength() {
       this.$store.dispatch('posts/populate')
+    },
+
+    queueLength() {
+      if(!this.$store.getters['posts/queueHasEnough']) this.fetch()
     }
   },
 

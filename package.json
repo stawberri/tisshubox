@@ -1,7 +1,7 @@
 {
   "name": "tisshubox",
   "version": "0.0.0",
-  "description": "random image finder for danbooru",
+  "description": "danbooru image viewer",
   "main": "index.js",
   "scripts": {
     "pretest": "brunch build",

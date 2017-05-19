@@ -22,6 +22,10 @@ module.exports = store => {
 
       queueIds({queue}) {
         return queue.map(post => +post.id)
+      },
+
+      queueHasEnough({queue}) {
+        return queue.length > 30
       }
     },
 
