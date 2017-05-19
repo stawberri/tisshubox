@@ -8,8 +8,6 @@
   )
     .wrapper(:key='tisshu.id' v-if='tisshu')
       tisshu(:tisshu='tisshu')
-    .wrapper(key='error' v-else-if='started && !queueLength')
-      tisshu(:tisshu='noPosts')
   buttons(:c='c' @press='handleButton')
 </template>
 
@@ -20,11 +18,7 @@ const chroma = req('chroma-js')
 module.exports = {
   data: () => ({
     animation: 'fade',
-    defaultColor: false,
-    started: false,
-    noPosts: {
-      error: new Error('no posts found')
-    }
+    defaultColor: false
   }),
 
   computed: {
@@ -54,6 +48,10 @@ module.exports = {
       ]
     },
 
+    tisshuLength() {
+      return this.$store.state.posts.tisshus.length
+    },
+
     queueLength() {
       return this.$store.state.posts.queue.length
     }
@@ -62,6 +60,10 @@ module.exports = {
   watch: {
     title(title) {
       document.title = title
+    },
+
+    tisshuLength() {
+      this.$store.dispatch('posts/populate')
     }
   },
 
@@ -96,7 +98,6 @@ module.exports = {
       let {post} = this.tisshu
       this.$store.commit('posts/delete')
       this.$store.dispatch('data/cache/stash', {post})
-      this.$store.dispatch('posts/populate')
     },
 
     trash() {
@@ -106,7 +107,6 @@ module.exports = {
       let {post} = this.tisshu
       this.$store.commit('posts/delete')
       this.$store.dispatch('data/cache/trash', {post})
-      this.$store.dispatch('posts/populate')
     },
 
     next() {
@@ -127,13 +127,8 @@ module.exports = {
     }
   },
 
-  async mounted() {
-    try {
-      await this.$store.dispatch('posts/fetch', {queueOnly: true})
-    } catch(err) {
-      console.error(err)
-    }
-    this.started = true
+  async created() {
+    await this.$store.dispatch('posts/fetch', {queueOnly: true})
   },
 
   components: {
