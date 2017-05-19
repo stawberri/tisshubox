@@ -2,7 +2,7 @@ module.exports = {
   add(state, {post, noAlert}) {
     let id = +post.id
     let index = state.tisshus.findIndex(tisshu => tisshu.id === id)
-    if(~index) return state.tisshus[index].post = post
+    if(~index) throw new Error(`post ${id} already exists`)
 
     for(
       index = 0;
@@ -130,8 +130,12 @@ module.exports = {
   dequeue({queue}, {id} = {}) {
     let index = 0
     if(typeof id !== 'undefined')
-      index = queue.find(post => post.id === '' + id)
+      index = queue.find(post => +post.id === +id)
     if(~index) return queue.splice(index, 1)
+  },
+
+  reject({rejectedPosts}, {id}) {
+    rejectedPosts.push(+id)
   },
 
   flag(state, options) {
@@ -149,5 +153,9 @@ module.exports = {
         break
       }
     }
+  },
+
+  incrementRecursiveFetchPage(state) {
+    state.recursiveFetchPage++
   }
 }

@@ -18,7 +18,8 @@ const chroma = req('chroma-js')
 module.exports = {
   data: () => ({
     animation: 'fade',
-    defaultColor: false
+    defaultColor: false,
+    fetchTimeout: null
   }),
 
   computed: {
@@ -68,6 +69,12 @@ module.exports = {
   },
 
   methods: {
+    async fetch(options) {
+      clearTimeout(this.fetchTimeout)
+      await this.$store.dispatch('posts/fetch', options)
+      this.fetchTimeout = setTimeout(() => this.fetch(), 30000)
+    },
+
     handleButton(button) {
       switch(button) {
         case 'prev':
@@ -128,7 +135,11 @@ module.exports = {
   },
 
   async created() {
-    await this.$store.dispatch('posts/fetch', {queueOnly: true})
+    this.fetch({queueOnly: true})
+  },
+
+  beforeDestroy() {
+    clearTimeout(fetchTimeout)
   },
 
   components: {

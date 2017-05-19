@@ -8,9 +8,11 @@ module.exports = store => {
       tisshus: [],
       conveyor: [],
       queue: [],
+      rejectedPosts: [],
       populating: false,
       fetching: false,
-      lastFetchNoPosts: false
+      fetchedLastPage: false,
+      recursiveFetchPage: 2
     }),
 
     getters: {
