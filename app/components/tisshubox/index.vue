@@ -145,12 +145,30 @@ module.exports = {
     },
 
     jump(id) {
-      let {tisshuIndex} = this.$store.state.posts
+      if(this.$store.state.posts.tisshus.length < 2) return
+      let {tisshus, tisshuIndex} = this.$store.state.posts
       let ids = this.$store.getters['posts/tisshuIds']
       let newIndex = ids.indexOf(id)
       if(~newIndex) {
-        if(newIndex > tisshuIndex) this.animation = 'fade-left'
-        else this.animation = 'fade-right'
+        switch(true) {
+          case (newIndex === 0 && tisshuIndex === tisshus.length - 1):
+          case (newIndex === tisshuIndex + 1):
+            this.animation = 'left'
+          break
+          case (tisshuIndex === 0 && newIndex === tisshus.length - 1):
+          case (newIndex === tisshuIndex - 1):
+            this.animation = 'right'
+          break
+          case (newIndex > tisshuIndex):
+            this.animation = 'fade-left'
+          break
+          case (newIndex < tisshuIndex):
+            this.animation = 'fade-right'
+          break
+          default:
+            return
+          break
+        }
       }
       this.$store.commit('posts/go', {id})
     },
