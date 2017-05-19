@@ -130,7 +130,6 @@ module.exports = {
   async mounted() {
     try {
       await this.$store.dispatch('posts/fetch', {queueOnly: true})
-      await this.$store.dispatch('posts/populate')
     } catch(err) {
       console.error(err)
     }

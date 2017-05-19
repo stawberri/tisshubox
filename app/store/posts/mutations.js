@@ -94,6 +94,11 @@ module.exports = {
     }
   },
 
+  convey({conveyor}, {post} = {}) {
+    if(post) conveyor.push(post)
+    else conveyor.shift()
+  },
+
   enqueue({queue}, {arrays}) {
     let index = 0
     while(arrays.find(array => array.length)) {

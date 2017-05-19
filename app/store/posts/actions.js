@@ -6,10 +6,19 @@ module.exports = {
   async populate({state, commit, dispatch}) {
     if(state.populating) return
     commit('populating', {value: true})
-    while(state.tisshus.length < 9) {
-      if(!state.queue.length) await dispatch('fetch')
-      commit('add', {post: state.queue[0], noAlert: true})
-      commit('dequeue')
+    while(
+      state.conveyor.length ||
+      state.tisshus.length < 9
+    ) {
+      if(state.conveyor.length) {
+        commit('add', {post: state.conveyor[0]})
+        commit('convey')
+      } else if(state.queue.length) {
+        commit('add', {post: state.queue[0], noAlert: true})
+        commit('dequeue')
+      } else {
+        throw new Error('no posts available')
+      }
       dispatch('process')
       await new Promise(resolve => setTimeout(resolve, 690))
     }
@@ -38,8 +47,7 @@ module.exports = {
         switch(true) {
           case getters.tisshuIds.includes(+post.id):
           case (!queueOnly && !getters.queueIds.includes(+post.id)):
-            commit('add', {post})
-            dispatch('process')
+            commit('convey', {post})
           break
 
           default:
@@ -53,6 +61,7 @@ module.exports = {
 
     commit('enqueue', {arrays})
     if(!postsFound) throw new Error('no posts found')
+    await dispatch('populate')
   },
 
   async process({state, commit, dispatch, getters}) {

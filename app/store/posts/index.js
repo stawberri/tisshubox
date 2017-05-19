@@ -6,6 +6,7 @@ module.exports = store => {
     state: () => ({
       tisshuIndex: 0,
       tisshus: [],
+      conveyor: [],
       queue: [],
       populating: false,
     }),
