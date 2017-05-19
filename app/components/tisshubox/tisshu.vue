@@ -1,6 +1,6 @@
 <template lang='pug'>
 .tisshu
-  .picture(v-if='tisshu.ready' :style='pictureStyle')
+  .picture(v-if='ready' :style='pictureStyle')
   .message(v-else-if='error')
     .icon: .fa.fa-exclamation-triangle
     .text
@@ -46,7 +46,27 @@ module.exports = {
       let {error} = this.tisshu
       if(!error) return
       return error.message
+    },
+
+    ready() {
+      return this.tisshu.ready
     }
+  },
+
+  watch: {
+    ready: 'seen'
+  },
+
+  methods: {
+    seen() {
+      if(this.tisshu.seen) return
+      let {id} = this.tisshu
+      this.$store.commit('posts/edit', {id, data: {seen: true}})
+    }
+  },
+
+  mounted() {
+    if(this.ready) this.seen()
   }
 }
 </script>

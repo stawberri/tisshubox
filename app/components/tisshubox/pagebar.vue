@@ -12,8 +12,9 @@ transition-group.pagebar(
       :style='tisshu.style'
       :class='{current: tisshu.current}'
     )
-      .fa.fa-circle(v-if='tisshu.ready')
-      .fa.fa-circle-o(v-else)
+      .fa.fa-circle-o(v-if='!tisshu.ready')
+      .fa.fa-exclamation-circle(v-else-if='!tisshu.seen')
+      .fa.fa-circle(v-else)
 </template>
 
 <script>
@@ -38,13 +39,28 @@ module.exports = {
       let {tisshus, tisshuIndex} = this.$store.state.posts
       tisshus = tisshus.map((tisshu, index) => {
         let current = index === tisshuIndex
+
+        let color
+        switch(true) {
+          case current:
+            color = this.c[4]
+          break
+          case !tisshu.ready:
+            color = this.c[3]
+          break
+          case !tisshu.seen:
+            color = this.c[2]
+          break
+          default:
+            color = this.c[1]
+          break
+        }
+
         return Object.assign(
           Object.create(tisshu),
           {
             current,
-            style: {
-              color: this.c[current ? 4 : 2]
-            }
+            style: {color}
           }
         )
       })

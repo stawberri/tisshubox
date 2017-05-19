@@ -27,7 +27,6 @@ module.exports = {
 
     if(state.tisshus.length === 1) state.tisshuIndex = 0
     else if(index <= state.tisshuIndex) state.tisshuIndex++
-    state.tisshus[state.tisshuIndex].seen = true
   },
 
   go(state, options = {}) {
@@ -57,7 +56,6 @@ module.exports = {
     index = (index % length + length) % length
 
     state.tisshuIndex = index
-    state.tisshus[index].seen = true
   },
 
   delete(state, {id} = {}) {
@@ -74,8 +72,6 @@ module.exports = {
     if(state.tisshuIndex > index) state.tisshuIndex--
     else if(state.tisshuIndex === state.tisshus.length)
       state.tisshuIndex = 0
-
-    if(state.tisshus.length) state.tisshus[state.tisshuIndex].seen = true
   },
 
   edit(state, {id, data}) {
