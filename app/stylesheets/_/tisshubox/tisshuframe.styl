@@ -5,8 +5,9 @@
 
   > .wrapper
     position absolute
-    margin 10px
-    width 'calc(100% - %s)' % (@margin * 2)
+    box-sizing border-box
+    padding 10px
+    width 100%
     height @width
     display flex
     overflow hidden

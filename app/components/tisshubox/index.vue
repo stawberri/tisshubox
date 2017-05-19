@@ -4,6 +4,7 @@
   .tisshuframe: transition(
     :name='animation'
     @after-leave='defaultColor = false'
+    @leave='leaveAnim'
     @after-enter='animation = "fade"'
   )
     .wrapper(:key='tisshu.id' v-if='tisshu')
@@ -19,7 +20,8 @@ module.exports = {
   data: () => ({
     animation: 'fade',
     defaultColor: false,
-    fetchTimeout: null
+    fetchTimeout: null,
+    lastAnimationDone: () => {}
   }),
 
   computed: {
@@ -151,6 +153,11 @@ module.exports = {
         else this.animation = 'fade-right'
       }
       this.$store.commit('posts/go', {id})
+    },
+
+    leaveAnim(el, done) {
+      this.lastAnimationDone()
+      this.lastAnimationDone = done
     }
   },
 
