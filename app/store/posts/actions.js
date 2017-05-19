@@ -16,7 +16,7 @@ module.exports = {
     commit('populating', {value: false})
   },
 
-  async fetch({rootState, commit, getters, rootGetters}, {queueOnly} = {}) {
+  async fetch({rootState, commit, dispatch, getters, rootGetters}, {queueOnly} = {}) {
     let booru = rootGetters['data/booru/']
     let {searches} = rootState.data.booru
     let postsFound = 0
@@ -28,6 +28,7 @@ module.exports = {
       let queuePosts = []
       for(let post of posts) {
         switch(true) {
+          case (rootGetters['data/cache/ids'].includes(+post.id)):
           case !('request' in post.file):
           case !~post.file.ext.search(/^jpg|jpeg|jpe|jif|jfif|jfi|png$/):
             continue

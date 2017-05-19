@@ -3,7 +3,8 @@ module.exports = store => {
     namespaced: true,
 
     modules: {
-      booru: require('./booru')
+      booru: require('./booru'),
+      cache: require('./cache')
     }
   })
 }

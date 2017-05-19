@@ -93,7 +93,9 @@ module.exports = {
       if(!this.tisshu) return
       this.animation = 'up'
       this.defaultColor = true
+      let {post} = this.tisshu
       this.$store.commit('posts/delete')
+      this.$store.dispatch('data/cache/stash', {post})
       this.$store.dispatch('posts/populate')
     },
 
@@ -101,7 +103,9 @@ module.exports = {
       if(!this.tisshu) return
       this.animation = 'down'
       this.defaultColor = true
+      let {post} = this.tisshu
       this.$store.commit('posts/delete')
+      this.$store.dispatch('data/cache/trash', {post})
       this.$store.dispatch('posts/populate')
     },
 
