@@ -134,8 +134,20 @@ module.exports = {
     if(~index) return queue.splice(index, 1)
   },
 
-  populating(state, {value} = {}) {
-    if(typeof value === 'undefined') value = !state.populating
-    state.populating = value
+  flag(state, options) {
+    for(let key in options) {
+      if(!(key in state)) throw new Error(`${key} is an invalid key`)
+      if(typeof state[key] !== 'boolean') throw new Error(`${key} is not a flag`)
+      switch(options[key]) {
+        case true:
+        case false:
+          state[key] = options[key]
+        break
+
+        default:
+          state[key] = !state[key]
+        break
+      }
+    }
   }
 }

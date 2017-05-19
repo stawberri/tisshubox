@@ -9,6 +9,8 @@ module.exports = store => {
       conveyor: [],
       queue: [],
       populating: false,
+      fetching: false,
+      lastFetchNoPosts: false
     }),
 
     getters: {

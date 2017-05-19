@@ -5,7 +5,7 @@ const chroma = req('chroma-js')
 module.exports = {
   async populate({state, commit, dispatch}) {
     if(state.populating) return
-    commit('populating', {value: true})
+    commit('flag', {populating: true})
     while(
       state.conveyor.length ||
       state.tisshus.length < 9
@@ -22,10 +22,12 @@ module.exports = {
       dispatch('process')
       await new Promise(resolve => setTimeout(resolve, 690))
     }
-    commit('populating', {value: false})
+    commit('flag', {populating: false})
   },
 
-  async fetch({rootState, commit, dispatch, getters, rootGetters}, {queueOnly} = {}) {
+  async fetch({state, rootState, commit, dispatch, getters, rootGetters}, {queueOnly} = {}) {
+    if(state.fetching) return
+    commit('flag', {fetching: true})
     let booru = rootGetters['data/booru/']
     let {searches} = rootState.data.booru
     let postsFound = 0
@@ -60,7 +62,11 @@ module.exports = {
     })))
 
     commit('enqueue', {arrays})
-    if(!postsFound) throw new Error('no posts found')
+    commit('flag', {
+      fetching: false,
+      lastFetchNoPosts: !postsFound
+    })
+
     await dispatch('populate')
   },
 
