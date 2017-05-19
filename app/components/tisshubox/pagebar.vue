@@ -37,14 +37,13 @@ module.exports = {
     tisshus() {
       let {tisshus, tisshuIndex} = this.$store.state.posts
       tisshus = tisshus.map((tisshu, index) => {
-        let color = tisshu.colors || this.c
         let current = index === tisshuIndex
         return Object.assign(
           Object.create(tisshu),
           {
             current,
             style: {
-              color: color[current ? 4 : 2]
+              color: this.c[current ? 4 : 2]
             }
           }
         )
