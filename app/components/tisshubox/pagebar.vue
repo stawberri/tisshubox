@@ -12,7 +12,8 @@ transition-group.pagebar(
       :style='tisshu.style'
       :class='{current: tisshu.current}'
     )
-      .fa.fa-circle-o(v-if='!tisshu.ready')
+      .fa.fa-circle(v-if='tisshu.current')
+      .fa.fa-circle-o(v-else-if='!tisshu.ready')
       .fa.fa-exclamation-circle(v-else-if='!tisshu.seen')
       .fa.fa-circle(v-else)
 </template>
@@ -45,10 +46,10 @@ module.exports = {
           case current:
             color = this.c[4]
           break
-          case !tisshu.ready:
+          case !tisshu.seen:
             color = this.c[3]
           break
-          case !tisshu.seen:
+          case !tisshu.ready:
             color = this.c[2]
           break
           default:
