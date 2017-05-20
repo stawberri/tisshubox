@@ -12,35 +12,50 @@
     display flex
     overflow hidden
 
-    &.left-enter-active:not(.left-enter)
-    &.left-leave-active:not(.left-leave)
-    &.right-enter-active:not(.right-enter)
-    &.right-leave-active:not(.right-leave)
+    &.left-enter-active
+    &.left-leave-active
+    &.right-enter-active
+    &.right-leave-active
       &
       .tisshu
         transition-property transform
         transition-duration @transition-duration
 
-    &.up-enter-active:not(.up-enter)
-    &.up-leave-active:not(.up-leave)
-    &.down-enter-active:not(.down-enter)
-    &.down-leave-active:not(.down-leave)
+    &.up-left-enter-active
+    &.up-left-leave-active
+    &.down-left-enter-active
+    &.down-left-leave-active
       &
       .tisshu
         transition-property transform, filter, opacity
         transition-duration $vertical-duration
 
-    &.up-enter-active:not(.up-enter)
-    &.down-enter-active:not(.down-enter)
+    &.up-left-enter-active
+    &.down-left-enter-active
       &
       .tisshu
         transition-delay $vertical-duration
 
-    &.up-enter
-    &.down-enter
+    &.left-enter
+    &.left-leave
+    &.right-enter
+    &.right-leave
+    &.up-left-enter
+    &.up-left-leave
+    &.down-left-enter
+    &.down-left-leave
+    &.up-left-enter
+    &.down-left-enter
+      &
+      .tisshu
+        transition none
+
+    &.up-left-enter
+    &.down-left-enter
     &.left-enter
     &.right-leave-to
       transform translateX(100vw)
+      transition none
 
       .tisshu
         transform translateX(-20vw)
@@ -52,12 +67,12 @@
       .tisshu
         transform translateX(20vw)
 
-    &.up-leave-to
+    &.up-left-leave-to
       transform translateY(-20vh) scale(1.1)
       filter brightness(1.85)
       opacity 0
 
-    &.down-leave-to
+    &.down-left-leave-to
       transform translateY(20vh) scale(0.9)
       filter brightness(0.15)
       opacity 0

@@ -25,8 +25,10 @@ module.exports = {
   computed: {
     animation() {
       switch(this.outerAnim) {
-        case 'up':
-        case 'down':
+        case 'up-left':
+        case 'down-left':
+        case 'up-right':
+        case 'down-right':
           return `page-${this.outerAnim}`
         break
 
