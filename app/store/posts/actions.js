@@ -47,6 +47,7 @@ module.exports = {
       let queuePosts = []
       for(let post of posts) {
         let id = +post.id
+        let oldestTisshuId = getters.tisshuIds[getters.tisshuIds.length - 1]
 
         switch(true) {
           case !('request' in post.file):
@@ -71,7 +72,7 @@ module.exports = {
             commit('edit', {id, data: {post}})
           break
 
-          case !queueOnly:
+          case (!queueOnly && id > oldestTisshuId):
             newPosts++
             commit('convey', {post})
           break
