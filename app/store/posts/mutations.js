@@ -69,9 +69,8 @@ module.exports = {
     if(download && typeof download.abort === 'function') download.abort()
     if(url) URL.revokeObjectURL(url)
 
-    if(state.tisshuIndex > index) state.tisshuIndex--
-    else if(state.tisshuIndex === state.tisshus.length)
-      state.tisshuIndex = 0
+    if(state.tisshuIndex > index || state.tisshuIndex === state.tisshus.length)
+      state.tisshuIndex--
   },
 
   edit(state, {id, data}) {

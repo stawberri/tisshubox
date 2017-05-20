@@ -121,7 +121,8 @@ module.exports = {
 
     stash() {
       if(!this.tisshu) return
-      this.animation = 'up-left'
+      let index = this.$store.state.posts.tisshuIndex
+      this.animation = index === this.tisshuLength - 1 ? 'up-right' : 'up-left'
       this.colorOverride = [this.c[2], this.c[0], this.c[0], this.c[0], this.c[0]]
       let {post} = this.tisshu
       this.$store.commit('posts/delete')
@@ -130,7 +131,8 @@ module.exports = {
 
     trash() {
       if(!this.tisshu) return
-      this.animation = 'down-left'
+      let index = this.$store.state.posts.tisshuIndex
+      this.animation = index === this.tisshuLength - 1 ? 'down-right' : 'down-left'
       this.colorOverride = [this.c[3], this.c[0], this.c[0], this.c[0], this.c[0]]
       let {post} = this.tisshu
       this.$store.commit('posts/delete')

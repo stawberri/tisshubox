@@ -22,16 +22,22 @@
         transition-duration @transition-duration
 
     &.up-left-enter-active
+    &.up-right-enter-active
     &.up-left-leave-active
+    &.up-right-leave-active
     &.down-left-enter-active
+    &.down-right-enter-active
     &.down-left-leave-active
+    &.down-right-leave-active
       &
       .tisshu
         transition-property transform, filter, opacity
         transition-duration $vertical-duration
 
     &.up-left-enter-active
+    &.up-right-enter-active
     &.down-left-enter-active
+    &.down-right-enter-active
       &
       .tisshu
         transition-delay $vertical-duration
@@ -41,11 +47,17 @@
     &.right-enter
     &.right-leave
     &.up-left-enter
+    &.up-right-enter
     &.up-left-leave
+    &.up-right-leave
     &.down-left-enter
+    &.down-right-enter
     &.down-left-leave
+    &.down-right-leave
     &.up-left-enter
+    &.up-right-enter
     &.down-left-enter
+    &.down-right-enter
       &
       .tisshu
         transition none
@@ -55,11 +67,12 @@
     &.left-enter
     &.right-leave-to
       transform translateX(100vw)
-      transition none
 
       .tisshu
         transform translateX(-20vw)
 
+    &.up-right-enter
+    &.down-right-enter
     &.right-enter
     &.left-leave-to
       transform translateX(-100vw)
@@ -68,11 +81,13 @@
         transform translateX(20vw)
 
     &.up-left-leave-to
+    &.up-right-leave-to
       transform translateY(-20vh) scale(1.1)
       filter brightness(1.85)
       opacity 0
 
     &.down-left-leave-to
+    &.down-right-leave-to
       transform translateY(20vh) scale(0.9)
       filter brightness(0.15)
       opacity 0
