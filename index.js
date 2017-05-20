@@ -3,7 +3,7 @@ const url = require('url')
 const path = require('path')
 
 global.tisshubox = true
-if(app.makeSingleInstance(relaunch)) return app.quit()
+if(app.makeSingleInstance(relaunch)) app.exit()
 
 app.once('ready', async () => {
   try {
