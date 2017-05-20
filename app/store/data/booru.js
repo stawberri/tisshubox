@@ -4,7 +4,7 @@ module.exports = {
   namespaced: true,
   state: () => ({
     auth: {},
-    safebooru: true,
+    server: 'safe-danbooru',
     searches: [
       {
         tags: 'score:5..',
@@ -15,10 +15,10 @@ module.exports = {
 
   getters: {
     ''(state) {
-      if(state.safebooru)
-        return new Danbooru.Safebooru(state.auth)
-      else
-        return new Danbooru(state.auth)
+      switch(state.server) {
+        case 'danbooru': return new Danbooru(state.auth)
+        case 'safe-danbooru': return new Danbooru.Safebooru(state.auth)
+      }
     }
   }
 }
