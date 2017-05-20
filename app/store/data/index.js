@@ -1,10 +1,9 @@
-module.exports = store => {
+module.exports = (store, ...args) => {
   store.registerModule('data', {
-    namespaced: true,
-
-    modules: {
-      booru: require('./booru'),
-      cache: require('./cache')
-    }
+    namespaced: true
   })
+
+  for(let plugin of [
+    'booru', 'cache'
+  ]) require(`./${plugin}`)(store, ...args)
 }
