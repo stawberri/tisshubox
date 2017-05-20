@@ -176,6 +176,9 @@ module.exports = {
     leaveAnim(el, done) {
       this.lastAnimationDone()
       this.lastAnimationDone = done
+      el.addEventListener('transitionend', event => {
+        if(event.target === el) done()
+      }, {once: true})
     }
   },
 
