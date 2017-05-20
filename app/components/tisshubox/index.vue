@@ -3,12 +3,10 @@
   pagebar(:c='c' @jump='jump' :outerAnim='animation')
   .tisshuframe: transition(
     :name='animation'
-    @after-leave='defaultColor = false'
+    @after-leave='colorOverride = null'
     @leave='leaveAnim'
     @after-enter='animation = "fade"'
-  )
-    .wrapper(:key='tisshu.id' v-if='tisshu')
-      tisshu(:tisshu='tisshu')
+  ): .wrapper(:key='tisshu.id' v-if='tisshu'): tisshu
   buttons(:c='c' @press='handleButton')
 </template>
 
@@ -19,7 +17,7 @@ const chroma = req('chroma-js')
 module.exports = {
   data: () => ({
     animation: 'fade',
-    defaultColor: false,
+    colorOverride: null,
     fetchTimeout: null,
     lastAnimationDone: () => {}
   }),
@@ -56,7 +54,8 @@ module.exports = {
     },
 
     c() {
-      if(!this.defaultColor && this.tisshu && this.tisshu.colors)
+      if(this.colorOverride) return this.colorOverride
+      else if(this.tisshu && this.tisshu.colors)
         return this.tisshu.colors
       else return [
         chroma(0xf8e9e0),
@@ -123,7 +122,7 @@ module.exports = {
     stash() {
       if(!this.tisshu) return
       this.animation = 'up'
-      this.defaultColor = true
+      this.colorOverride = [this.c[2], this.c[0], this.c[0], this.c[0], this.c[0]]
       let {post} = this.tisshu
       this.$store.commit('posts/delete')
       this.$store.dispatch('data/cache/stash', {post})
@@ -132,7 +131,7 @@ module.exports = {
     trash() {
       if(!this.tisshu) return
       this.animation = 'down'
-      this.defaultColor = true
+      this.colorOverride = [this.c[3], this.c[0], this.c[0], this.c[0], this.c[0]]
       let {post} = this.tisshu
       this.$store.commit('posts/delete')
       this.$store.dispatch('data/cache/trash', {post})

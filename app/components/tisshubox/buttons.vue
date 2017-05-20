@@ -54,14 +54,25 @@ module.exports = {
 
       for(let button in states) {
         let display
+        let color
         switch(button) {
           case 'prev':
+            color = this.c[1]
+            display = this.length > 1
+          break
+
           case 'next':
+            color = this.c[1]
             display = this.length > 1
           break
 
           case 'stash':
+            color = this.c[2]
+            display = !!this.length
+          break
+
           case 'trash':
+            color = this.c[3]
             display = !!this.length
           break
         }
@@ -71,14 +82,13 @@ module.exports = {
           switch(true) {
             case (states[button].active):
               Object.assign(styles[button], {
-                color: this.c[3],
-                textShadow: `0 0 5px ${this.c[3]}`
+                color, textShadow: `0 0 5px ${color}`
               })
             break
 
             case (states[button].hover):
               Object.assign(styles[button], {
-                textShadow: `0 0 15px ${this.c[3]}`
+                textShadow: `0 0 15px ${color}`
               })
             break
 

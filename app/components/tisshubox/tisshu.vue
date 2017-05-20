@@ -21,9 +21,11 @@
 
 <script>
 module.exports = {
-  props: ['tisshu'],
-
   computed: {
+    tisshu() {
+      return this.$store.state.posts.tisshus[this.$store.state.posts.tisshuIndex]
+    },
+
     pictureStyle() {
       let {tisshu} = this
       let {post} = tisshu
