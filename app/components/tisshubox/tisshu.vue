@@ -67,7 +67,7 @@ module.exports = {
     }
   },
 
-  mounted() {
+  created() {
     if(this.ready) this.seen()
   }
 }

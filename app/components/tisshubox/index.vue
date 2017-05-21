@@ -183,7 +183,7 @@ module.exports = {
     }
   },
 
-  async created() {
+  created() {
     this.fetch({queueOnly: true})
   },
 

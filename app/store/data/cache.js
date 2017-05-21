@@ -5,14 +5,14 @@ module.exports = store => {
     namespaced: true,
 
     state: () => ({
-      posts: [],
+      posts: {},
       trashTags: {},
       stashTags: {}
     }),
 
     getters: {
       ids({posts}) {
-        return posts.map(post => post.id)
+        return Object.keys(posts).map(id => +id)
       }
     },
 
@@ -36,8 +36,8 @@ module.exports = store => {
 
         for(let tag of tags) Vue.set(stateTags, tag, -~stateTags[tag])
 
-        posts.push({
-          id, action,
+        Vue.set(posts, id, {
+          action,
           date: Date.now()
         })
       }
