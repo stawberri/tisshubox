@@ -1,14 +1,10 @@
 <template lang='pug'>
-#tisshupack(v-if='quitting')
-  .fa.fa-spinner.fa-pulse
-  .text saving settings
-tisshubox(v-else-if='ready')
-#tisshupack(v-else)
-  .fa.fa-spinner.fa-pulse
-  .text loading settings
+tisshubox(v-if='ready && !quitting')
 </template>
 
 <script>
+const {remote} = req('electron')
+
 module.exports = {
   data: () => ({
     quitting: false
@@ -22,6 +18,15 @@ module.exports = {
 
   components: {
     tisshubox: require('./tisshubox')
+  },
+
+  created() {
+    window.addEventListener('beforeunload', async event => {
+      event.returnValue = 0
+      this.quitting = true
+      await this.$store.dispatch('data/save')
+      remote.getCurrentWindow().destroy()
+    })
   }
 }
 </script>

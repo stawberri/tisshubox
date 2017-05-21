@@ -188,7 +188,7 @@ module.exports = {
   },
 
   beforeDestroy() {
-    clearTimeout(fetchTimeout)
+    clearTimeout(this.fetchTimeout)
   },
 
   components: {
