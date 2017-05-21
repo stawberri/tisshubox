@@ -27,6 +27,10 @@ module.exports = async (store, ...args) => {
     },
 
     mutations: {
+      ready(state) {
+        state.rootReady = true
+      },
+
       json(state, {key, data}) {
         if(!(key in state)) throw new Error(`invalid data key ${key}`)
         state[key] = JSON.parse(data)
@@ -158,6 +162,7 @@ module.exports = async (store, ...args) => {
     if(Object(data[key]) !== data[key]) return
     store.commit('data/scheduleSave', {key})
   })
+  store.commit('data/ready')
 
   function saveTimeout() {
     return setTimeout(() => store.dispatch('data/save'), 60000)

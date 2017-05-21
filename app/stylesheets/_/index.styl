@@ -1,2 +1,28 @@
 @import html
 @import tisshubox
+
+#tisshupack
+  width 100vw
+  height 100vh
+  display flex
+  flex-flow column
+  justify-content center
+  align-items center
+
+  &::before
+  &::after
+    content ''
+    display block
+    flex 2
+
+  &::after
+    flex 3
+
+  .fa
+    font-size 4rem
+    color $c1
+
+  .text
+    font-size 2rem
+    color $c3
+    margin 20px 0
