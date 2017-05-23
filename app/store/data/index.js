@@ -2,6 +2,7 @@ const {remote} = req('electron')
 const fs = req('fs')
 const path = req('path')
 const mkdirp = req('mkdirp2')
+const Vue = require('vue')
 
 module.exports = async (store, ...args) => {
   store.registerModule('data', {
@@ -31,9 +32,16 @@ module.exports = async (store, ...args) => {
         state.rootReady = true
       },
 
-      json(state, {key, data}) {
+      load(state, {key, data}) {
         if(!(key in state)) throw new Error(`invalid data key ${key}`)
-        state[key] = JSON.parse(data)
+        let dest = state[key]
+        for(let key of data) Vue.set(dest, key, data[key])
+      },
+
+      loadUnder(state, {key, data}) {
+        if(!(key in state)) throw new Error(`invalid data key ${key}`)
+        let dest = state[key]
+        for(let key of data) if(!(key in dest)) Vue.set(dest, key, data[key])
       },
 
       scheduleSave(state, {key}) {
@@ -95,8 +103,12 @@ module.exports = async (store, ...args) => {
             data = await new Promise((s, j) => {
               fs.readFile(path.join(state.rootPath, file), (e, d) => e ? j(e) : s(d))
             })
-          } catch(err) { resolve() }
-          commit('json', {key: path.basename(file, '.json'), data})
+            data = JSON.parse(data)
+          } catch(err) {
+            console.error(err)
+            resolve()
+          }
+          commit('load', {key: path.basename(file, '.json'), data})
           resolve()
         })))
       },
