@@ -1,7 +1,23 @@
 const Vue = require('vue')
 
 module.exports = store => {
-  let service = {}
+  store.registerModule(['dataExtra', 'service'], {
+    namespaced: true,
+    state: () => ({
+      template: null,
+      computed: {}
+    }),
+
+    mutations: {
+      template(state, {template}) {
+        state.template = template
+      },
+
+      computed({computed}, {data}) {
+        for(let key in data) Vue.set(computed, key, data[key])
+      }
+    }
+  })
 
   store.registerModule(['data', 'service'], {
     namespaced: true,
@@ -10,27 +26,31 @@ module.exports = store => {
     }),
 
     getters: {
-      argObject(state) {
-        let {computed} = service
+      template(state, getters, rootState) {
+        return rootState.dataExtra.service.template
+      },
+
+      argObject(state, getters, rootState) {
+        let {computed} = rootState.dataExtra.service
         let set = (target, data) => store.commit('data/service/set', {target, data})
         return {state, computed, set}
       },
 
       fetch(state, getters) {
-        if(typeof service.template.fetch === 'function')
-          return options => service.template.fetch(getters.argObject, options)
+        if(typeof getters.template.fetch === 'function')
+          return options => getters.template.fetch(getters.argObject, options)
         else return () => []
       },
 
       stash(state, getters) {
-        if(typeof service.template.stash === 'function')
-          return options => service.template.stash(getters.argObject, options)
+        if(typeof getters.template.stash === 'function')
+          return options => getters.template.stash(getters.argObject, options)
         else return () => {}
       },
 
       trash(state, getters) {
-        if(typeof service.template.trash === 'function')
-          return options => service.template.trash(getters.argObject, options)
+        if(typeof getters.template.trash === 'function')
+          return options => getters.template.trash(getters.argObject, options)
         else return () => {}
       }
     },
@@ -49,19 +69,26 @@ module.exports = store => {
     },
 
     actions: {
-      async loadService({state, commit}) {
-        service.template = require(`scripts/services/${state.service}`)
-        await commit(
-          'data/loadUnder',
-          {key: 'service', data: service.template.state},
+      async loadService({state, commit, getters}) {
+        commit(
+          'dataExtra/service/template',
+          {template: require(`scripts/services/${state.service}`)},
           {root: true}
         )
-        service.computed = {}
-        for(let key in service.template.computed) {
-          let compute = service.template.computed[key]
+        await commit(
+          'data/loadUnder',
+          {key: 'service', data: getters.template.state},
+          {root: true}
+        )
+        for(let key in getters.template.computed) {
+          let compute = getters.template.computed[key]
           store.watch(
             () => compute.watch(state),
-            () => service.computed[key] = compute.value(state),
+            () => commit(
+              'dataExtra/service/computed',
+              {data: {[key]: compute.value(state)}},
+              {root: true}
+            ),
             {immediate: true}
           )
         }
