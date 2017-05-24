@@ -136,7 +136,7 @@ module.exports = {
 
         url = URL.createObjectURL(new Blob([data]))
         commit('edit', {id, data: {download: null, url, data: () => data}})
-        dispatch('workers/task', {task: {require: 'process-image', id, url}}, {root: true})
+        dispatch('workers/task', {task: {require: 'process-image', id, data}}, {root: true})
 
         if(!getters.tisshuIds.includes(id)) throw new Error('cancelled')
         resolve()

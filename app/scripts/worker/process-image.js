@@ -3,17 +3,14 @@ const fileType = req('file-type')
 const getImageColors = req('get-image-colors')
 const chroma = req('chroma-js')
 
-module.exports = async (tisshubox, {id, url}) => {
+module.exports = async (tisshubox, {id, data}) => {
   try {
-    tisshubox.log('received')
-    let response = await fetch(url)
-    let buffer = Buffer.from(await response.arrayBuffer())
-    let image = nativeImage.createFromBuffer(buffer)
+    let image = nativeImage.createFromBuffer(data)
 
-    let type = fileType(buffer).mime
+    let type = fileType(data).mime
     let size = image.getSize()
 
-    let colors = await getImageColors(buffer, type)
+    let colors = await getImageColors(data, type)
     colors.sort((a, b) =>
       chroma.contrast(a, '#fff') - chroma.contrast(b, '#fff')
     )
@@ -24,7 +21,6 @@ module.exports = async (tisshubox, {id, url}) => {
       type, size,
       colors
     }})
-    tisshubox.log('dispatched')
   } catch(err) {
     let {message} = err
     let error = {message}
