@@ -8,7 +8,9 @@ module.exports = {
       {
         tags: 'score:5..'
       }
-    ]
+    ],
+    stashTags: {},
+    trashTags: {}
   },
 
   computed: {
@@ -60,9 +62,33 @@ module.exports = {
       }
       if(artists) post.title = `Drawn by ${artists}`
 
+      $(post).post = rawPost
+
       return post
     })
     posts = posts.filter(post => !!post)
     return posts
+  },
+
+  async stash({state, set}, {tisshu}) {
+    let {stashTags} = state
+    let tags = $(tisshu.post).post.tags.slice()
+    let data = {}
+    for(let tag of tags) data[tag] = -~stashTags[tag]
+    set(stashTags, data)
+  },
+
+  async trash({state, set}, {tisshu}) {
+    let {trashTags} = state
+    let tags = $(tisshu.post).post.tags.slice()
+    let data = {}
+    for(let tag of tags) data[tag] = -~trashTags[tag]
+    set(trashTags, data)
   }
+}
+
+let intern = new WeakMap()
+function $(obj) {
+  if(!intern.has(obj)) intern.set(obj, {})
+  return intern.get(obj)
 }

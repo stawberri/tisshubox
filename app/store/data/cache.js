@@ -12,43 +12,25 @@ module.exports = store => {
 
     getters: {
       ids({posts}) {
-        return Object.keys(posts)
+        return Object.keys(posts).map(id => +id)
       }
     },
 
     mutations: {
-      add({posts, trashTags, stashTags}, {action, post}) {
-        let {id, tags} = post
-
-        let stateTags
-        switch(action) {
-          case 'trash':
-            stateTags = trashTags
-          break
-          case 'stash':
-            stateTags = stashTags
-          break
-          default:
-            throw new Error(`invalid action ${action}`)
-          break
-        }
-
-        for(let tag of tags) Vue.set(stateTags, tag, -~stateTags[tag])
-
-        Vue.set(posts, id, {
-          action,
-          date: Date.now()
-        })
+      add({posts, trashTags, stashTags}, {action, tisshu}) {
+        Vue.set(posts, tisshu.id, {action, date: Date.now()})
       }
     },
 
     actions: {
-      trash({commit}, {post}) {
-        commit('add', {action: 'trash', post})
+      stash({commit, rootGetters}, {tisshu}) {
+        commit('add', {action: 'stash', tisshu})
+        rootGetters['data/service/stash']({tisshu})
       },
 
-      stash({commit}, {post}) {
-        commit('add', {action: 'stash', post})
+      trash({commit, rootGetters}, {tisshu}) {
+        commit('add', {action: 'trash', tisshu})
+        rootGetters['data/service/trash']({tisshu})
       }
     }
   })

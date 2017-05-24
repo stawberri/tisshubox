@@ -1,3 +1,5 @@
+const Vue = require('vue')
+
 module.exports = store => {
   let service = {}
 
@@ -10,20 +12,38 @@ module.exports = store => {
     getters: {
       argObject(state) {
         let {computed} = service
-        return {state, computed}
+        let set = (target, data) => store.commit('data/service/set', {target, data})
+        return {state, computed, set}
       },
 
       fetch(state, getters) {
-        return options => service.template.fetch(getters.argObject, options)
+        if(typeof service.template.fetch === 'function')
+          return options => service.template.fetch(getters.argObject, options)
+        else return () => []
+      },
+
+      stash(state, getters) {
+        if(typeof service.template.stash === 'function')
+          return options => service.template.stash(getters.argObject, options)
+        else return () => {}
+      },
+
+      trash(state, getters) {
+        if(typeof service.template.trash === 'function')
+          return options => service.template.trash(getters.argObject, options)
+        else return () => {}
       }
     },
 
     mutations: {
-      set(store, {data}) {
-        for(let key of data) {
-          if(key === 'service') throw new Error(`can't edit service`)
-          if(key in store) store[key] = data[key]
-          else throw new Error(`key ${key} does not exist`)
+      set(store, {target = store, data}) {
+        if(Object(target) !== target) throw new Error(`target isn't an object`)
+        for(let key in data) {
+          if(target === store) {
+            if(key === 'service') throw new Error(`can't edit service`)
+            if(key in store) store[key] = data[key]
+            else throw new Error(`key ${key} does not exist`)
+          } else Vue.set(target, key, data[key])
         }
       }
     },

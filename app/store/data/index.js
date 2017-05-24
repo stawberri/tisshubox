@@ -13,8 +13,7 @@ module.exports = async (store, ...args) => {
       rootTimeout: null,
       rootChanged: [],
       rootCurrentSave: null,
-      rootPendingSave: null,
-      rootData: {profile: 'default'}
+      rootPendingSave: null
     }),
 
     getters: {
@@ -35,7 +34,7 @@ module.exports = async (store, ...args) => {
       load(state, {key, data}) {
         if(!(key in state)) throw new Error(`invalid data key ${key}`)
         let dest = state[key]
-        for(let key of data) Vue.set(dest, key, data[key])
+        for(let key in data) Vue.set(dest, key, data[key])
       },
 
       loadUnder(state, {key, data}) {
@@ -79,10 +78,14 @@ module.exports = async (store, ...args) => {
 
     actions: {
       async getProfile({state, commit}) {
-        let data = state.rootData
+        let data
         let userData = path.join(remote.app.getPath('userData'), '0.0.0')
         let dataPath = path.join(userData, 'index.json')
-        try { data = req(dataPath) } catch(e) {}
+        try {
+          data = req(dataPath)
+        } catch(e) {
+          data = {profile: 'default'}
+        }
         let profilePath = path.join(userData, data.profile)
         commit('profilePath', {profilePath})
       },
@@ -99,15 +102,10 @@ module.exports = async (store, ...args) => {
         files = files.filter(file => path.extname(file) === '.json')
         await Promise.all(files.map(file => new Promise(async (resolve, reject) => {
           let data
-          try {
-            data = await new Promise((s, j) => {
-              fs.readFile(path.join(state.rootPath, file), (e, d) => e ? j(e) : s(d))
-            })
-            data = JSON.parse(data)
-          } catch(err) {
-            console.error(err)
-            resolve()
-          }
+          data = await new Promise((s, j) => {
+            fs.readFile(path.join(state.rootPath, file), (e, d) => e ? j(e) : s(d))
+          })
+          data = JSON.parse(data)
           commit('load', {key: path.basename(file, '.json'), data})
           resolve()
         })))
@@ -143,19 +141,15 @@ module.exports = async (store, ...args) => {
           let {json} = getters
           if(!changed.length) return
           commit('clearSave')
-          try {
-            await Promise.all(changed.map(change => new Promise(async(resolve, reject) => {
-              if(!(change in json)) reject(new Error(`invalid data key ${change}`))
-              let data = json[change]
-              await mkdirp.promise(state.rootPath)
-              fs.writeFile(path.join(state.rootPath, `${change}.json`), data, error => {
-                if(error) reject(error)
-                else resolve()
-              })
-            })))
-          } catch(error) {
-            console.error(error)
-          }
+          await Promise.all(changed.map(change => new Promise(async(resolve, reject) => {
+            if(!(change in json)) reject(new Error(`invalid data key ${change}`))
+            let data = json[change]
+            await mkdirp.promise(state.rootPath)
+            fs.writeFile(path.join(state.rootPath, `${change}.json`), data, error => {
+              if(error) reject(error)
+              else resolve()
+            })
+          })))
         }
       }
     }
