@@ -41,7 +41,7 @@ module.exports = async (store, ...args) => {
       loadUnder(state, {key, data}) {
         if(!(key in state)) throw new Error(`invalid data key ${key}`)
         let dest = state[key]
-        for(let key of data) if(!(key in dest)) Vue.set(dest, key, data[key])
+        for(let key in data) if(!(key in dest)) Vue.set(dest, key, data[key])
       },
 
       scheduleSave(state, {key}) {
@@ -162,11 +162,12 @@ module.exports = async (store, ...args) => {
   })
 
   for(let plugin of [
-    'booru', 'cache'
+    'service', 'cache'
   ]) require(`./${plugin}`)(store, ...args)
 
   await store.dispatch('data/getProfile')
   await store.dispatch('data/load')
+  await store.dispatch('data/service/loadService')
   store.subscribe(({type}, {data}) => {
     let match = type.match(/^data\/([^/]+)\//)
     if(!match) return

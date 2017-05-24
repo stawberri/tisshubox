@@ -36,11 +36,8 @@ module.exports = {
 
       let title = ''
 
-      if(this.tisshu  && this.tisshu.post) {
-        let artists = this.tisshu.post.tags.artist.join(', ')
-        artists = artists.replace(/_/g, ' ')
-        if(artists) title += `Drawn by ${artists}`
-      }
+      if(this.tisshu && this.tisshu.post)
+        title = this.tisshu.post.title || ''
 
       let hasTitle
       if(title) {

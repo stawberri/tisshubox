@@ -36,25 +36,33 @@ module.exports = {
     }
   },
 
-  async fetch({state, computed}) {
+  async fetch({state, computed}, {page} = {}) {
     let posts = await Promise.all(state.searches.map(search => {
       let {tags} = search
-      return computed.booru.posts({tags})
+      return computed.booru.posts(Object.assign(
+        {limit: 100, page},
+        {tags}
+      ))
     }))
     posts = posts.reduce((posts, array) => [...posts, ...array], [])
-    posts.sort((a, b) => +b.id - +a.id)
     posts = posts.map(rawPost => {
+      let id = rawPost.id
+
       let artists = rawPost.tags.artist.join(', ')
       artists = artists.replace(/_/g, ' ')
 
+      if(!('request' in rawPost.file)) return {id}
+
       let post = {
-        id: +rawPost.id, title,
+        id,
+        ext: rawPost.file.ext,
         download: computed.baseUrl + rawPost.raw.file_url
       }
       if(artists) post.title = `Drawn by ${artists}`
 
       return post
     })
+    posts = posts.filter(post => !!post)
     return posts
   }
 }

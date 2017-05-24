@@ -28,11 +28,10 @@ module.exports = {
 
     pictureStyle() {
       let {tisshu} = this
-      let {post} = tisshu
 
       return {
-        width: post.file.width + 'px',
-        height: post.file.height + 'px',
+        width: tisshu.size.width + 'px',
+        height: tisshu.size.height + 'px',
         backgroundImage: `url(${this.tisshu.url})`
       }
     },
@@ -47,7 +46,7 @@ module.exports = {
     error() {
       let {error} = this.tisshu
       if(!error) return
-      return error.message
+      return error.message || 'unknown error'
     },
 
     ready() {

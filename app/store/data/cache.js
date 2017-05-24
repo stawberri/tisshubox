@@ -12,14 +12,13 @@ module.exports = store => {
 
     getters: {
       ids({posts}) {
-        return Object.keys(posts).map(id => +id)
+        return Object.keys(posts)
       }
     },
 
     mutations: {
       add({posts, trashTags, stashTags}, {action, post}) {
         let {id, tags} = post
-        id = +id
 
         let stateTags
         switch(action) {

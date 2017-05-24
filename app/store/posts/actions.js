@@ -1,3 +1,4 @@
+const {remote} = req('electron')
 const fileType = req('file-type')
 const getImageColors = req('get-image-colors')
 const chroma = req('chroma-js')
@@ -32,26 +33,24 @@ module.exports = {
     if(state.fetching && !recursive) return
     commit('flag', {fetching: true})
 
-    let booru = rootGetters['data/booru/']
-    let {searches} = rootState.data.booru
     let newPosts = 0
     let fetchedPosts = 0
     let queuedPosts = 0
 
     let page = recursive ? (tryPage || state.recursiveFetchPage) : 1
-    let arrays = await Promise.all(searches.map(search => new Promise(async (resolve, reject) => {
-      let posts = await booru.posts(Object.assign({limit: 100, page}, search))
+    let arrays = await new Promise(async (resolve, reject) => {
+      let posts = await rootGetters['data/service/fetch']({page})
       fetchedPosts += posts.length
-      posts.sort((a, b) => +b.id - +a.id)
+      posts.sort((a, b) => b.id - a.id)
 
       let queuePosts = []
       for(let post of posts) {
-        let id = +post.id
+        let id = post.id
         let oldestTisshuId = getters.tisshuIds[getters.tisshuIds.length - 1]
 
         switch(true) {
-          case !('request' in post.file):
-          case !~post.file.ext.search(/^jpg|jpeg|jpe|jif|jfif|jfi|png$/):
+          case !('download' in post):
+          case !~post.ext.search(/^jpg|jpeg|jpe|jif|jfif|jfi|png$/):
             commit('reject', {id})
             newPosts++
 
@@ -81,7 +80,7 @@ module.exports = {
 
       queuedPosts += queuePosts.length
       resolve(queuePosts)
-    })))
+    })
 
     if(queuedPosts) commit('enqueue', {arrays})
     if(!fetchedPosts) commit('flag', {fetchedLastPage: true})
@@ -113,18 +112,30 @@ module.exports = {
 
         let data = [], attempts = 3
         do {
-          let {download} = await staggerDownload(post)
+          await staggerDownload(post)
+          let request = remote.net.request(post.download)
+          request.on('error', err => {throw err})
+          let download = new Promise(resolve => request.on('response', resolve))
+          request.end()
+          download = await download
           commit('edit', {id, data: {download}})
-          let progressThrottle
-          download.data((part, total) =>
+
+          let total = +download.headers['content-length']
+          let part = 0
+          data = Buffer.allocUnsafe(total)
+          let complete = new Promise(resolve => download.on('end', resolve))
+          download.on('error', err => {throw err})
+          download.on('data', chunk => {
+            let {length} = chunk
+            part += chunk.copy(data, part)
             commit('edit', {id, data: {progress: {part, total}}})
-          )
-          data = await download
+          })
+          await complete
         } while(!data.length && attempts--)
         if(!data.length) throw new Error('unable to download')
 
         url = URL.createObjectURL(new Blob([data]))
-        commit('edit', {id, data: {download: null, url}})
+        commit('edit', {id, data: {download: null, url, data: () => data}})
         dispatch('workers/task', {task: {require: 'process-image', id, url}}, {root: true})
 
         if(!getters.tisshuIds.includes(id)) throw new Error('cancelled')
@@ -151,5 +162,4 @@ async function staggerDownload(post) {
   staggerDownloadTime += 300
   if(staggerDownloadTime < now) staggerDownloadTime = now
   await new Promise(resolve => setTimeout(resolve, staggerDownloadTime - now))
-  return {download: post.file.download()}
 }

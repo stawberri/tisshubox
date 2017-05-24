@@ -3,9 +3,9 @@ module.exports = store => {
 
   store.registerModule(['data', 'service'], {
     namespaced: true,
-    state: () => {
-      service: 'danbooru',
-    },
+    state: () => ({
+      service: 'danbooru'
+    }),
 
     getters: {
       argObject(state) {
@@ -14,7 +14,7 @@ module.exports = store => {
       },
 
       fetch(state, getters) {
-        return () => service.template.fetch(getters.argObject)
+        return options => service.template.fetch(getters.argObject, options)
       }
     },
 
@@ -29,16 +29,16 @@ module.exports = store => {
     },
 
     actions: {
-      async loadService({state, dispatch}) {
+      async loadService({state, commit}) {
         service.template = require(`scripts/services/${state.service}`)
-        await dispatch(
+        await commit(
           'data/loadUnder',
           {key: 'service', data: service.template.state},
           {root: true}
         )
         service.computed = {}
-        for(let key of template.computed) {
-          let compute = template.computed[key]
+        for(let key in service.template.computed) {
+          let compute = service.template.computed[key]
           store.watch(
             () => compute.watch(state),
             () => service.computed[key] = compute.value(state),

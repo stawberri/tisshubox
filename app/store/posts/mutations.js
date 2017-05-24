@@ -1,6 +1,6 @@
 module.exports = {
   add(state, {post, noAlert}) {
-    let id = +post.id
+    let id = post.id
     let index = state.tisshus.findIndex(tisshu => tisshu.id === id)
     if(~index) throw new Error(`post ${id} already exists`)
 
@@ -22,7 +22,9 @@ module.exports = {
       ready: false,
       type: '',
       colors: null,
-      seen: false
+      seen: false,
+      size: null,
+      data: null
     })
 
     if(state.tisshus.length === 1) state.tisshuIndex = 0
@@ -40,7 +42,7 @@ module.exports = {
       break
 
       case ('id' in options):
-        index = state.tisshus.findIndex(tisshu => tisshu.id === +options.id)
+        index = state.tisshus.findIndex(tisshu => tisshu.id === options.id)
         if(!~index) throw new Error('invalid id')
       break
 
@@ -61,12 +63,12 @@ module.exports = {
   delete(state, {id} = {}) {
     let index = state.tisshuIndex
     if(typeof id !== 'undefined')
-      index = state.tisshus.find(tisshu => tisshu.id === +id)
+      index = state.tisshus.find(tisshu => tisshu.id === id)
     if(!~index) return
 
     let {download, url} = state.tisshus[index]
     state.tisshus.splice(index, 1)
-    if(download && typeof download.abort === 'function') download.abort()
+    if(download && typeof download.destroy === 'function') download.destroy()
     if(url) URL.revokeObjectURL(url)
 
     if(state.tisshuIndex > index || state.tisshuIndex === state.tisshus.length)
@@ -74,7 +76,6 @@ module.exports = {
   },
 
   edit(state, {id, data}) {
-    id = +id
     let tisshu = state.tisshus.find(tisshu => tisshu.id === id)
     if(!tisshu) return
 
@@ -96,17 +97,18 @@ module.exports = {
 
   enqueue({queue}, {arrays}) {
     let index = 0
+    if(!Array.isArray(arrays[0])) arrays = [arrays]
     while(arrays.find(array => array.length)) {
       let biggest = -2, value
       let endOfQueue = index === queue.length
       if(!endOfQueue) {
         biggest = -1
-        value = +queue[index].id
+        value = queue[index].id
       }
 
       arrays = arrays.filter(array => array.length)
       for(let current = 0; current < arrays.length; current++) {
-        let id = +arrays[current][0].id
+        let id = arrays[current][0].id
         if(id >= value || biggest === -2) {
           biggest = current
           value = id
@@ -116,7 +118,7 @@ module.exports = {
       if(biggest === -1) index++
       else queue.splice(
         index,
-        +(!endOfQueue && value === +queue[index].id),
+        +(!endOfQueue && value === queue[index].id),
         arrays[biggest].shift()
       )
     }
@@ -125,12 +127,12 @@ module.exports = {
   dequeue({queue}, {id} = {}) {
     let index = 0
     if(typeof id !== 'undefined')
-      index = queue.find(post => +post.id === +id)
+      index = queue.find(post => post.id === id)
     if(~index) return queue.splice(index, 1)
   },
 
   reject({rejectedPosts}, {id}) {
-    rejectedPosts.push(+id)
+    rejectedPosts.push(id)
   },
 
   flag(state, options) {
