@@ -54,13 +54,13 @@ module.exports = store => {
 
       stash(state, getters) {
         if(typeof getters.template.stash === 'function')
-          return options => getters.template.stash(getters.argObject, options)
+          return tisshu => getters.template.stash(getters.argObject, {tisshu})
         else return () => {}
       },
 
       trash(state, getters) {
         if(typeof getters.template.trash === 'function')
-          return options => getters.template.trash(getters.argObject, options)
+          return tisshu => getters.template.trash(getters.argObject, {tisshu})
         else return () => {}
       }
     },

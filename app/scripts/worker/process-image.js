@@ -7,7 +7,7 @@ module.exports = async (tisshubox, {id, data}) => {
   try {
     let image = nativeImage.createFromBuffer(data)
 
-    let type = fileType(data).mime
+    let {ext, mime: type} = fileType(data)
     let size = image.getSize()
 
     let colors = await getImageColors(data, type)
@@ -18,7 +18,9 @@ module.exports = async (tisshubox, {id, data}) => {
 
     tisshubox.dispatch('posts/processResults', {id, data: {
       ready: true,
-      type, size,
+      ext,
+      type,
+      size,
       colors
     }})
   } catch(err) {

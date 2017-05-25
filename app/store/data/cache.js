@@ -19,12 +19,14 @@ module.exports = store => {
     actions: {
       stash({commit, rootGetters}, {tisshu}) {
         commit('add', {action: 'stash', tisshu})
-        rootGetters['data/service/stash']({tisshu})
+        rootGetters['data/service/stash'](tisshu)
+        rootGetters['data/actions/stash'](tisshu)
       },
 
       trash({commit, rootGetters}, {tisshu}) {
         commit('add', {action: 'trash', tisshu})
-        rootGetters['data/service/trash']({tisshu})
+        rootGetters['data/service/trash'](tisshu)
+        rootGetters['data/actions/trash'](tisshu)
       }
     }
   })

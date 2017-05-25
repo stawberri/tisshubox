@@ -21,6 +21,7 @@ module.exports = {
       error: null,
       ready: false,
       type: '',
+      ext: '',
       colors: null,
       seen: false,
       size: null,

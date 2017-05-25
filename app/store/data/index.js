@@ -6,7 +6,7 @@ const Vue = require('vue')
 
 module.exports = async (store, ...args) => {
   store.registerModule('dataExtra', {namespaced: true})
-  
+
   store.registerModule('data', {
     namespaced: true,
     state: () => ({
@@ -158,7 +158,7 @@ module.exports = async (store, ...args) => {
   })
 
   for(let plugin of [
-    'service', 'cache'
+    'service', 'cache', 'actions'
   ]) require(`./${plugin}`)(store, ...args)
 
   await store.dispatch('data/getProfile')
