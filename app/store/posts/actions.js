@@ -49,13 +49,13 @@ module.exports = {
         let oldestTisshuId = getters.tisshuIds[getters.tisshuIds.length - 1]
 
         switch(true) {
-          case !('download' in post):
+          case (!post.download):
           case !~post.ext.search(/^jpg|jpeg|jpe|jif|jfif|jfi|png$/):
             commit('reject', {id})
             newPosts++
 
           case state.rejectedPosts.includes(id):
-          case (rootGetters['data/cache/ids'].includes(id)):
+          case (('' + id) in rootState.data.cache.posts):
             continue
           break
         }

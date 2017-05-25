@@ -10,12 +10,6 @@ module.exports = store => {
       stashTags: {}
     }),
 
-    getters: {
-      ids({posts}) {
-        return Object.keys(posts).map(id => +id)
-      }
-    },
-
     mutations: {
       add({posts, trashTags, stashTags}, {action, tisshu}) {
         Vue.set(posts, tisshu.id, {action, date: Date.now()})
