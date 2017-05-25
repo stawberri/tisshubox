@@ -5,6 +5,8 @@ const mkdirp = req('mkdirp2')
 const Vue = require('vue')
 
 module.exports = async (store, ...args) => {
+  store.registerModule('dataExtra', {namespaced: true})
+  
   store.registerModule('data', {
     namespaced: true,
     state: () => ({

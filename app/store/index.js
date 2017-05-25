@@ -12,7 +12,6 @@ module.exports = new Vuex.Store({
   },
 
   plugins: [
-    require('./data-extra'),
     require('./data'),
     require('./posts'),
     require('./workers'),
