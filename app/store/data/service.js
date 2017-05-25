@@ -32,7 +32,17 @@ module.exports = store => {
 
       argObject(state, getters, rootState) {
         let {computed} = rootState.dataExtra.service
-        let set = (target, data) => store.commit('data/service/set', {target, data})
+
+        let set = (target = state, data) => {
+          if(target === state) {
+            for(let key in data) {
+              if(key === 'service') throw new Error(`can't edit service`)
+              if(!(key in state)) throw new Error(`key ${key} does not exist`)
+            }
+          }
+          store.commit('set', {target, data})
+        }
+
         return {state, computed, set}
       },
 
@@ -52,19 +62,6 @@ module.exports = store => {
         if(typeof getters.template.trash === 'function')
           return options => getters.template.trash(getters.argObject, options)
         else return () => {}
-      }
-    },
-
-    mutations: {
-      set(store, {target = store, data}) {
-        if(Object(target) !== target) throw new Error(`target isn't an object`)
-        for(let key in data) {
-          if(target === store) {
-            if(key === 'service') throw new Error(`can't edit service`)
-            if(key in store) store[key] = data[key]
-            else throw new Error(`key ${key} does not exist`)
-          } else Vue.set(target, key, data[key])
-        }
       }
     },
 
