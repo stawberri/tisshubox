@@ -1,4 +1,3 @@
-const {remote} = req('electron')
 const Vue = require('vue')
 const store = require('store')
 

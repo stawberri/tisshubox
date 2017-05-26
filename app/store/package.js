@@ -1,4 +1,4 @@
-const {remote} = req('electron')
+const {remote: {require: requi}} = req('electron')
 const https = req('https')
 
 module.exports = store => {
@@ -6,7 +6,7 @@ module.exports = store => {
     namespaced: true,
 
     state: () => ({
-      local: remote.require('./package'),
+      local: requi('./package'),
       github: null
     }),
 

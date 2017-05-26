@@ -3,7 +3,7 @@ tisshubox(v-if='ready && !quitting')
 </template>
 
 <script>
-const {remote} = req('electron')
+const {remote: {getCurrentWindow}} = req('electron')
 
 module.exports = {
   data: () => ({
@@ -25,7 +25,7 @@ module.exports = {
       event.returnValue = 0
       this.quitting = true
       await this.$store.dispatch('data/save')
-      remote.getCurrentWindow().destroy()
+      getCurrentWindow().destroy()
     })
   }
 }

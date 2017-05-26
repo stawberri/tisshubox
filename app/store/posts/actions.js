@@ -1,4 +1,4 @@
-const {remote} = req('electron')
+const {remote: {net}} = req('electron')
 const fileType = req('file-type')
 const getImageColors = req('get-image-colors')
 const chroma = req('chroma-js')
@@ -113,7 +113,7 @@ module.exports = {
         let data = [], attempts = 3
         do {
           await staggerDownload(post)
-          let request = remote.net.request(post.download)
+          let request = net.request(post.download)
           request.on('error', err => {throw err})
           let download = new Promise(resolve => request.on('response', resolve))
           request.end()

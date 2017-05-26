@@ -1,8 +1,8 @@
-const {remote} = req('electron')
+const {remote: {getCurrentWebContents, getCurrentWindow}} = req('electron')
 const tisshubox = require('./tisshubox')
 window.addEventListener('error', event => {
   if(process.env.NODE_ENV !== 'production')
-    remote.getCurrentWebContents().openDevTools()
+    getCurrentWebContents().openDevTools()
 })
 
 !async function() {
@@ -14,7 +14,7 @@ window.addEventListener('error', event => {
       if(
         error.emptyQueue === tisshubox.emptyQueue ||
         process.env.NODE_ENV === 'production'
-      ) remote.getCurrentWindow().destroy()
+      ) getCurrentWindow().destroy()
       else setImmediate(() => {throw error})
       return
     }

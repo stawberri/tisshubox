@@ -1,4 +1,4 @@
-const {remote, ipcRenderer} = req('electron')
+const {remote: {BrowserWindow, webContents}, ipcRenderer} = req('electron')
 
 module.exports = store => {
   store.registerModule('workers', {
@@ -19,12 +19,12 @@ module.exports = store => {
 
       worker(state) {
         let workers = state.workers.filter(win =>
-          remote.BrowserWindow.fromId(win) &&
-          !remote.BrowserWindow.fromId(win).isDestroyed()
+          BrowserWindow.fromId(win) &&
+          !BrowserWindow.fromId(win).isDestroyed()
         )
 
         if(workers.length >= 4) return
-        let win = new remote.BrowserWindow({show: false})
+        let win = new BrowserWindow({show: false})
         workers.push(win.id)
         state.workers = workers
 
@@ -53,7 +53,7 @@ module.exports = store => {
   })
 
   ipcRenderer.on('request-task', (event, workerId) => {
-    let worker = remote.webContents.fromId(workerId)
+    let worker = webContents.fromId(workerId)
     store.dispatch('workers/issue', {worker})
   })
 

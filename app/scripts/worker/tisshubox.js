@@ -1,7 +1,7 @@
-const {remote, ipcRenderer} = req('electron')
-const tisshubox = remote.getGlobal('tisshubox')
+const {remote: {getGlobal, getCurrentWebContents}, ipcRenderer} = req('electron')
+const tisshubox = getGlobal('tisshubox')
 const tisshuboxContents = tisshubox.webContents
-const webContents = remote.getCurrentWebContents()
+const webContents = getCurrentWebContents()
 
 const emptyQueue = Symbol('empty queue')
 exports = module.exports = {

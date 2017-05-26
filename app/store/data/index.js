@@ -1,4 +1,4 @@
-const {remote} = req('electron')
+const {remote: {app}} = req('electron')
 const fs = req('fs')
 const path = req('path')
 const mkdirp = req('mkdirp2')
@@ -81,7 +81,7 @@ module.exports = async (store, ...args) => {
     actions: {
       async getProfile({state, commit}) {
         let data
-        let userData = path.join(remote.app.getPath('userData'), '0.0.0')
+        let userData = path.join(app.getPath('userData'), '0.0.0')
         let dataPath = path.join(userData, 'index.json')
         try {
           data = req(dataPath)

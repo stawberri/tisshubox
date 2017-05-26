@@ -11,7 +11,6 @@
 </template>
 
 <script>
-const {remote} = req('electron')
 const chroma = req('chroma-js')
 const menu = require('scripts/tisshubox/menu')
 
