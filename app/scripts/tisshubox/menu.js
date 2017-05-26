@@ -1,18 +1,35 @@
 const {remote: {Menu, app}, shell} = req('electron')
 const Events = req('events')
 
-let singleton
-module.exports = class Appmenu extends Events {
-  constructor(store) {
-    if(singleton) return singleton
+module.exports = class AppMenu extends Events {
+  constructor(vm) {
     super()
-    singleton = this
 
     let template = [
       {
         label: 'File',
         submenu: [
-          {label: 'Meow!'},
+          {
+            label: 'Previous Tisshu',
+            accelerator: 'Left',
+            click: () => vm.prev()
+          },
+          {
+            label: 'Next Tisshu',
+            accelerator: 'Right',
+            click: () => vm.next()
+          },
+          {type: 'separator'},
+          {
+            label: 'Stash Tisshu',
+            accelerator: 'Up',
+            click: () => vm.stash()
+          },
+          {
+            label: 'Trash Tisshu',
+            accelerator: 'Down',
+            click: () => vm.trash()
+          },
           {type: 'separator'},
           {role: 'quit'}
         ]
@@ -29,11 +46,11 @@ module.exports = class Appmenu extends Events {
         submenu: [
           {
             label: 'Github',
-            click() {shell.openExternal(store.state.package.local.homepage)}
+            click: () => shell.openExternal(store.state.package.local.homepage)
           },
           {
             label: 'Bugs && Issues',
-            click() {shell.openExternal(store.state.package.local.bugs.url)}
+            click: () => shell.openExternal(store.state.package.local.bugs.url)
           }
         ]
       }
@@ -54,8 +71,13 @@ module.exports = class Appmenu extends Events {
     Menu.setApplicationMenu(this.menu)
   }
 
+  addListeners(vm) {
+    if(vm.appMenu === this) return
+    vm.appMenu = this
+    listeners(vm, this)
+  }
+
   destroy() {
     Menu.setApplicationMenu(null)
-    singleton = null
   }
 }

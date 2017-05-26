@@ -20,7 +20,7 @@ module.exports = {
     colorOverride: null,
     fetchTimeout: null,
     lastAnimationDone: () => {},
-    appMenu: () => {}
+    appMenu: null
   }),
 
   computed: {
@@ -182,7 +182,7 @@ module.exports = {
   },
 
   created() {
-    this.appMenu = new menu(this.$store)
+    new menu(this)
     this.fetch({queueOnly: true})
   },
 
