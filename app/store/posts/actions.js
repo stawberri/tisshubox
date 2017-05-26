@@ -49,6 +49,7 @@ module.exports = {
         let oldestTisshuId = getters.tisshuIds[getters.tisshuIds.length - 1]
 
         switch(true) {
+          case (post.skip):
           case (!post.download):
           case !~post.ext.search(/^jpg|jpeg|jpe|jif|jfif|jfi|png$/):
             commit('reject', {id})

@@ -158,7 +158,7 @@ module.exports = async (store, ...args) => {
   })
 
   for(let plugin of [
-    'service', 'cache', 'actions'
+    'service', 'cache', 'actions', 'window'
   ]) require(`./${plugin}`)(store, ...args)
 
   await store.dispatch('data/getProfile')

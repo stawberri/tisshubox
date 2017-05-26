@@ -53,11 +53,12 @@ module.exports = {
       let artists = rawPost.tags.artist.join(', ')
       artists = artists.replace(/_/g, ' ')
 
-      if(!('request' in rawPost.file)) return {id}
+      if(!('request' in rawPost.file)) return {id, skip: true}
 
       let post = {
         id,
         ext: rawPost.file.ext,
+        url: `${computed.baseUrl}/posts/${id}`,
         download: computed.baseUrl + rawPost.raw.file_url
       }
       if(artists) post.title = `Drawn by ${artists}`

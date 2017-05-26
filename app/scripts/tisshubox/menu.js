@@ -1,4 +1,4 @@
-const {remote: {Menu, app}, shell} = req('electron')
+const {remote: {Menu, app, getCurrentWindow}, shell} = req('electron')
 const Events = req('events')
 
 module.exports = vm => {
@@ -31,11 +31,38 @@ module.exports = vm => {
         {role: 'quit'}
       ]
     },
-    {role:'editMenu'},
+    {
+      label: 'Edit',
+      submenu: [
+        {role: 'undo'},
+        {role: 'redo'},
+        {type: 'separator'},
+        {role: 'cut'},
+        {role: 'copy'},
+        {role: 'paste'},
+        {role: 'pasteandmatchstyle'},
+        {role: 'delete'},
+        {type: 'separator'},
+        {role: 'selectall'}
+      ]
+    },
     {
       label: 'View',
       submenu: [
-        {label: 'Nyaa!'}
+        {
+          label: 'Browser Version',
+          click: () => shell.openExternal(vm.tisshu.post.url)
+        },
+        {
+          type: 'separator',
+          visible: process.platform !== 'darwin'
+        },
+        {
+          label: 'Auto hide menu bar',
+          type: 'checkbox',
+          checked: vm.$store.state.data.window.autoHideMenuBar,
+          click: item => vm.$store.commit('data/window/autoHideMenuBar', {hide: item.checked})
+        }
       ]
     },
     {
@@ -43,11 +70,11 @@ module.exports = vm => {
       submenu: [
         {
           label: 'Github',
-          click: () => shell.openExternal(store.state.package.local.homepage)
+          click: () => shell.openExternal(vm.$store.state.package.local.homepage)
         },
         {
           label: 'Bugs && Issues',
-          click: () => shell.openExternal(store.state.package.local.bugs.url)
+          click: () => shell.openExternal(vm.$store.state.package.local.bugs.url)
         }
       ]
     }
@@ -66,4 +93,36 @@ module.exports = vm => {
 
   let menu = Menu.buildFromTemplate(template)
   Menu.setApplicationMenu(menu)
+
+  if(process.platform !== 'darwin') {
+    vm.$watch('$store.state.data.window.autoHideMenuBar', autohide => {
+      let win = getCurrentWindow()
+      win.setAutoHideMenuBar(autohide)
+      win.setMenuBarVisibility(!autohide)
+    }, {immediate: true})
+  }
+
+  vm.$watch('$store.state.posts.tisshus.length', value => {
+    let {submenu} = menu.items[0]
+    let prev = submenu.items[0]
+    let next = submenu.items[1]
+    let stash = submenu.items[3]
+    let trash = submenu.items[4]
+    switch(value) {
+      case 0:
+        prev.enabled = next.enabled = false
+        stash.enabled = trash.enabled = false
+      break
+
+      case 1:
+        prev.enabled = next.enabled = false
+        stash.enabled = trash.enabled = true
+      break
+
+      default:
+        prev.enabled = next.enabled = true
+        stash.enabled = trash.enabled = true
+      break
+    }
+  }, {immediate: true})
 }

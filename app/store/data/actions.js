@@ -26,7 +26,7 @@ module.exports = store => {
         return async tisshu => await Promise.all(actions.map(action => action(tisshu)))
       },
 
-      trash() {
+      trash(state, getters, rootState) {
         let actions = state.trash.map(action => {
           let template = rootState.dataExtra.actions.templates[action.name]
           if(!template) throw new Error(`unknown action ${action.name}`)
