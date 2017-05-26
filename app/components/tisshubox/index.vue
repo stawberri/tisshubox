@@ -20,7 +20,7 @@ module.exports = {
     colorOverride: null,
     fetchTimeout: null,
     lastAnimationDone: () => {},
-    destroyMenu: () => {}
+    appMenu: () => {}
   }),
 
   computed: {
@@ -182,13 +182,13 @@ module.exports = {
   },
 
   created() {
-    this.destroyMenu = menu()
+    this.appMenu = new menu(this.$store)
     this.fetch({queueOnly: true})
   },
 
   beforeDestroy() {
     clearTimeout(this.fetchTimeout)
-    this.destroyMenu()
+    this.appMenu.destroy()
   },
 
   components: {
