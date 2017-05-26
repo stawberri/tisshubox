@@ -13,13 +13,15 @@
 <script>
 const {remote} = req('electron')
 const chroma = req('chroma-js')
+const menu = require('scripts/tisshubox/menu')
 
 module.exports = {
   data: () => ({
     animation: 'fade',
     colorOverride: null,
     fetchTimeout: null,
-    lastAnimationDone: () => {}
+    lastAnimationDone: () => {},
+    destroyMenu: () => {}
   }),
 
   computed: {
@@ -181,11 +183,13 @@ module.exports = {
   },
 
   created() {
+    this.destroyMenu = menu()
     this.fetch({queueOnly: true})
   },
 
   beforeDestroy() {
     clearTimeout(this.fetchTimeout)
+    this.destroyMenu()
   },
 
   components: {
