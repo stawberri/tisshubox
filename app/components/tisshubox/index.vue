@@ -13,6 +13,7 @@
 <script>
 const chroma = req('chroma-js')
 const menu = require('scripts/tisshubox/menu')
+const keys = require('scripts/tisshubox/keys')
 
 module.exports = {
   data: () => ({
@@ -62,6 +63,10 @@ module.exports = {
         chroma(0xbd7d6a),
         chroma(0x947c85)
       ]
+    },
+
+    ids() {
+      return this.$store.getters['posts/tisshuIds']
     },
 
     tisshuLength() {
@@ -172,6 +177,11 @@ module.exports = {
       this.$store.commit('posts/go', {id})
     },
 
+    jumpIndex(index) {
+      if(index > this.ids.length - 1) index = this.ids.length - 1
+      this.jump(this.ids[index])
+    },
+
     leaveAnim(el, done) {
       this.lastAnimationDone()
       this.lastAnimationDone = done
@@ -183,6 +193,7 @@ module.exports = {
 
   created() {
     new menu(this)
+    keys(this)
     this.fetch({queueOnly: true})
   },
 
