@@ -192,7 +192,7 @@ module.exports = {
   },
 
   created() {
-    new menu(this)
+    menu(this)
     keys(this)
     this.fetch({queueOnly: true})
   },
