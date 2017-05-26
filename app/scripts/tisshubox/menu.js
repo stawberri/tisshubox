@@ -64,6 +64,6 @@ module.exports = vm => {
     ]
   })
 
-  this.menu = Menu.buildFromTemplate(template)
-  Menu.setApplicationMenu(this.menu)
+  let menu = Menu.buildFromTemplate(template)
+  Menu.setApplicationMenu(menu)
 }
