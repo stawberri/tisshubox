@@ -12,16 +12,14 @@
 
 <script>
 const chroma = req('chroma-js')
-const menu = require('scripts/tisshubox/menu')
-const keys = require('scripts/tisshubox/keys')
+const tisshuHelpers = require('scripts/tisshubox/helpers')
 
 module.exports = {
   data: () => ({
     animation: 'fade',
     colorOverride: null,
     fetchTimeout: null,
-    lastAnimationDone: () => {},
-    appMenu: null
+    lastAnimationDone: () => {}
   }),
 
   computed: {
@@ -192,14 +190,12 @@ module.exports = {
   },
 
   created() {
-    menu(this)
-    keys(this)
+    tisshuHelpers(this)
     this.fetch({queueOnly: true})
   },
 
   beforeDestroy() {
     clearTimeout(this.fetchTimeout)
-    this.appMenu.destroy()
   },
 
   components: {
