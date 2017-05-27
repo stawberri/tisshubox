@@ -2,7 +2,7 @@ const {app, BrowserWindow} = require('electron')
 const url = require('url')
 const path = require('path')
 
-global.tisshubox = true
+global.tisshubox = null
 if(app.makeSingleInstance(relaunch)) app.exit()
 
 app.once('ready', async () => {
@@ -13,10 +13,6 @@ app.once('ready', async () => {
     global.debug = false
   }
 
-  makeTisshubox()
-})
-
-function makeTisshubox() {
   tisshubox = new BrowserWindow({
     width: 1280, height: 720,
     useContentSize: true,
@@ -27,16 +23,16 @@ function makeTisshubox() {
   tisshubox.loadURL(`file://${__dirname}/public/index.html`)
   tisshubox.once('closed', () => {
     tisshubox = null
-    if(process.platform !== 'darwin') app.quit()
+    app.exit()
   })
-}
+})
 
 app.on('open-file', relaunch)
 app.on('open-url', relaunch)
+app.on('activate', relaunch)
 function relaunch(event) {
   if(typeof event.preventDefault === 'function') event.preventDefault()
-  if(tisshubox === true) return
-  if(tisshubox === null) return makeTisshubox()
+  if(!tisshubox) return
 
   tisshubox.show()
   tisshubox.restore()
