@@ -32,27 +32,6 @@ module.exports = {
       return this.tisshus[tisshuIndex]
     },
 
-    title() {
-      let package = this.$store.state.package
-      if(package.github && package.local.version !== package.github.version)
-        return `Tisshubox v${package.local.version} — UPDATE AVAILABLE. PLEASE CHECK GITHUB FOR A NEWER VERSION.`
-
-      let title = ''
-
-      if(this.tisshu && this.tisshu.post)
-        title = this.tisshu.post.title || ''
-
-      let hasTitle
-      if(title) {
-        hasTitle = true
-        title += ' — '
-      }
-      title += `Tisshubox v${package.local.version}`
-      if(!hasTitle) title += ` — ${package.local.description}`
-
-      return title
-    },
-
     c() {
       if(this.colorOverride) return this.colorOverride
       else if(this.tisshu && this.tisshu.colors)
@@ -80,16 +59,18 @@ module.exports = {
   },
 
   watch: {
-    title(title) {
-      document.title = title
-    },
-
     tisshuLength() {
       this.$store.dispatch('posts/populate')
     },
 
     queueLength() {
       if(!this.$store.getters['posts/queueHasEnough']) this.fetch()
+    },
+
+    tisshu() {
+      if(this.tisshu && this.tisshu.post) {
+        this.$store.commit('window/title', {title: this.tisshu.post.title})
+      }
     }
   },
 

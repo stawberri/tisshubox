@@ -15,6 +15,7 @@ module.exports = new Vuex.Store({
     require('./data'),
     require('./posts'),
     require('./workers'),
-    require('./package')
+    require('./package'),
+    require('./window')
   ]
 })
