@@ -25,7 +25,8 @@ module.exports = {
       colors: null,
       seen: false,
       size: null,
-      data: null
+      data: null,
+      date: Date.now()
     })
 
     if(state.tisshus.length === 1) state.tisshuIndex = 0
