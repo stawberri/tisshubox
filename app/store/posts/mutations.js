@@ -1,5 +1,5 @@
 module.exports = {
-  add(state, {post, noAlert}) {
+  add(state, {post, noAlert = false}) {
     let id = post.id
     let index = state.tisshus.findIndex(tisshu => tisshu.id === id)
     if(~index) throw new Error(`post ${id} already exists`)

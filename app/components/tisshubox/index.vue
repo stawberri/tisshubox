@@ -23,10 +23,13 @@ module.exports = {
   }),
 
   computed: {
+    tisshus() {
+      return this.$store.state.posts.tisshus
+    },
+
     tisshu() {
       let {tisshuIndex} = this.$store.state.posts
-      let {tisshus} = this.$store.state.posts
-      return tisshus[tisshuIndex]
+      return this.tisshus[tisshuIndex]
     },
 
     title() {
@@ -68,7 +71,7 @@ module.exports = {
     },
 
     tisshuLength() {
-      return this.$store.state.posts.tisshus.length
+      return this.tisshus.length
     },
 
     queueLength() {
@@ -115,7 +118,7 @@ module.exports = {
     },
 
     prev() {
-      if(this.$store.state.posts.tisshus.length < 2) return
+      if(this.tisshus.length < 2) return
       this.animation = 'right'
       this.$store.commit('posts/go', {offset: -1})
     },
@@ -141,13 +144,13 @@ module.exports = {
     },
 
     next() {
-      if(this.$store.state.posts.tisshus.length < 2) return
+      if(this.tisshus.length < 2) return
       this.animation = 'left'
       this.$store.commit('posts/go')
     },
 
     jump(id) {
-      if(this.$store.state.posts.tisshus.length < 2) return
+      if(this.tisshus.length < 2) return
       let {tisshus, tisshuIndex} = this.$store.state.posts
       let ids = this.$store.getters['posts/tisshuIds']
       let newIndex = ids.indexOf(id)
