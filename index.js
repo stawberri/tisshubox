@@ -33,8 +33,5 @@ app.on('activate', relaunch)
 function relaunch(event) {
   if(typeof event.preventDefault === 'function') event.preventDefault()
   if(!tisshubox) return
-
   tisshubox.show()
-  tisshubox.restore()
-  tisshubox.focus()
 }
