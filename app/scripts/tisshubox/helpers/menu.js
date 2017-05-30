@@ -26,9 +26,7 @@ module.exports = vm => {
           label: 'Trash Tisshu',
           accelerator: 'Down',
           click: () => vm.trash()
-        },
-        {type: 'separator'},
-        {role: 'quit'}
+        }
       ]
     },
     {
@@ -90,6 +88,28 @@ module.exports = vm => {
       }
     ]
   })
+
+  if(process.platform === 'darwin') {
+    template.unshift({
+      label: app.getName(),
+      submenu: [
+        {role: 'about'},
+        {type: 'separator'},
+        {role: 'services', type: 'submenu'},
+        {type: 'separator'},
+        {role: 'hide'},
+        {role: 'hideothers'},
+        {role: 'unhide'},
+        {type: 'separator'},
+        {role: 'quit'}
+      ]
+    })
+  } else {
+    template[0].submenu.push(
+      {type: 'separator'},
+      {role: 'quit'}
+    )
+  }
 
   let menu = Menu.buildFromTemplate(template)
   Menu.setApplicationMenu(menu)

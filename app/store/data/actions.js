@@ -46,7 +46,7 @@ module.exports = store => {
       templates: {
         save: {
           options: {
-            path: path.join(app.getPath('downloads'), 'tisshubox')
+            path: path.join(app.getPath('downloads'), app.getName(), store.state.data.service.service)
           },
 
           async run({options, tisshu: {id, ext, data}}) {

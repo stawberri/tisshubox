@@ -1,4 +1,4 @@
-const {remote: {getCurrentWindow}} = req('electron')
+const {remote: {getCurrentWindow, app}} = req('electron')
 const win = getCurrentWindow()
 
 module.exports = store => {
@@ -18,11 +18,11 @@ module.exports = store => {
         let {package, window: {title}, posts: {tisshus}} = store.state
 
         if(package.github && package.local.version !== package.github.version) {
-          title = `Tisshubox v${package.local.version} — UPDATE AVAILABLE. PLEASE CHECK GITHUB FOR A NEWER VERSION.`
+          title = `${app.getName()} v${app.getVersion()} — UPDATE AVAILABLE. PLEASE CHECK GITHUB FOR A NEWER VERSION.`
         } else if(!title) {
-          title = `Tisshubox v${package.local.version} — ${package.local.description}`
+          title = `${app.getName()} v${app.getVersion()} — ${package.local.description}`
         } else {
-          title += ` — Tisshubox v${package.local.version}`
+          title += ` — ${app.getName()} v${app.getVersion()}`
         }
 
         let unseen = tisshus.filter(tisshu => tisshu.ready && !tisshu.seen).length

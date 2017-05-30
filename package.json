@@ -1,5 +1,6 @@
 {
   "name": "tisshubox",
+  "productName": "Tisshubox",
   "version": "0.0.0",
   "description": "danbooru image viewer",
   "main": "index.js",
