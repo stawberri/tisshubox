@@ -4,7 +4,17 @@ const win = getCurrentWindow()
 let tisshuAlert
 let focusTime
 module.exports = vm => {
-  vm.$watch('$store.state.window.focused', () => focusTime = Date.now())
+  vm.$watch('$store.state.window.focused', focused => {
+    if(!focused) focusTime = Date.now()
+    else {
+      if(tisshuAlert) {
+        tisshuAlert.close()
+        tisshuAlert = null
+      }
+      win.flashFrame(false)
+    }
+  }, {immediate: true})
+
   vm.$watch(() => {
     return vm.tisshus.filter(tisshu => {
       let {seen, ready} = tisshu
@@ -40,5 +50,7 @@ module.exports = vm => {
       win.show()
       vm.jump(oldest.id)
     })
+
+    win.flashFrame(true)
   }, {immediate: true})
 }
