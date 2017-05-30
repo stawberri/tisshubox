@@ -1,26 +1,28 @@
 <template lang='pug'>
 .tisshu
   .picture(v-if='ready' :style='pictureStyle')
-  .message(v-else-if='error')
+  .message(v-else-if='error' :style='{color: c[1]}')
     .icon: .fa.fa-exclamation-triangle
-    .text
+    .text(:style='{color: c[4]}')
       .primary error encountered
-      .secondary {{error}}
+      .secondary(:style='{color: c[3]}') {{error}}
   .message(v-else-if='tisshu.url')
     .icon: .fa.fa-circle-o-notch.fa-spin
-    .text processing image
+    .text(:style='{color: c[4]}') processing image
   .message(v-else-if='percent')
     .icon: .fa.fa-refresh.fa-spin
-    .text
+    .text(:style='{color: c[4]}')
       .primary {{percent}}
-      .secondary downloading
+      .secondary(:style='{color: c[3]}') downloading
   .message(v-else)
     .icon: .fa.fa-cog.fa-spin
-    .text beginning download
+    .text(:style='{color: c[4]}') beginning download
 </template>
 
 <script>
 module.exports = {
+  props: ['c'],
+
   computed: {
     tisshu() {
       return this.$store.state.posts.tisshus[this.$store.state.posts.tisshuIndex]

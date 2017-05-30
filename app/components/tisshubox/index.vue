@@ -6,7 +6,7 @@
     @after-leave='colorOverride = null'
     @leave='leaveAnim'
     @after-enter='animation = "fade"'
-  ): .wrapper(:key='tisshu.id' v-if='tisshu'): tisshu
+  ): .wrapper(:key='tisshu.id' v-if='tisshu'): tisshu(:c='c')
   buttons(:c='c' @press='handleButton')
 </template>
 
@@ -33,16 +33,31 @@ module.exports = {
     },
 
     c() {
-      if(this.colorOverride) return this.colorOverride
-      else if(this.tisshu && this.tisshu.colors)
-        return this.tisshu.colors
-      else return [
+      let c = [
         chroma(0xf8e9e0),
         chroma(0x894e4b),
         chroma(0xd79e90),
         chroma(0xbd7d6a),
         chroma(0x947c85)
       ]
+      if(this.tisshu && this.tisshu.colors) c = this.tisshu.colors
+
+      if(this.colorOverride) {
+        if(this.colorOverride.c) c = this.colorOverride.c
+        c = c.map(color => {
+          let {brighten, darken} = this.colorOverride
+
+          if(brighten) color = color.brighten(brighten)
+          if(darken) color = color.darken(darken)
+
+          return color
+        })
+      }
+
+      if(!this.$store.state.window.focused)
+        c = c.map(color => color.desaturate(2))
+
+      return c
     },
 
     ids() {
@@ -108,7 +123,7 @@ module.exports = {
       if(!this.tisshu) return
       let index = this.$store.state.posts.tisshuIndex
       this.animation = index === this.tisshuLength - 1 ? 'up-right' : 'up-left'
-      this.colorOverride = [this.c[2], this.c[0], this.c[0], this.c[0], this.c[0]]
+      this.colorOverride = {c: this.c.slice(), brighten: 2}
       let {tisshu} = this
       this.$store.commit('posts/delete')
       this.$store.dispatch('data/cache/stash', {tisshu})
@@ -118,7 +133,7 @@ module.exports = {
       if(!this.tisshu) return
       let index = this.$store.state.posts.tisshuIndex
       this.animation = index === this.tisshuLength - 1 ? 'down-right' : 'down-left'
-      this.colorOverride = [this.c[3], this.c[0], this.c[0], this.c[0], this.c[0]]
+      this.colorOverride = {c: this.c.slice(), darken: 2}
       let {tisshu} = this
       this.$store.commit('posts/delete')
       this.$store.dispatch('data/cache/trash', {tisshu})
