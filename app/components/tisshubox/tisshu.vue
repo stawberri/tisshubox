@@ -53,15 +53,21 @@ module.exports = {
 
     ready() {
       return this.tisshu.ready
+    },
+
+    focused() {
+      return this.$store.state.window.focused
     }
   },
 
   watch: {
-    ready: 'seen'
+    ready: 'seen',
+    focused: 'seen'
   },
 
   methods: {
     seen() {
+      if(!this.focused) return
       if(this.tisshu.seen) return
       let {id} = this.tisshu
       this.$store.commit('posts/edit', {id, data: {seen: Date.now()}})

@@ -16,7 +16,7 @@ module.exports = {
         commit('add', {post: state.conveyor[0]})
         commit('convey')
       } else if(state.queue.length) {
-        commit('add', {post: state.queue[0], noAlert: true})
+        commit('add', {post: state.queue[0]})
         commit('dequeue')
       } else return
       dispatch('process')

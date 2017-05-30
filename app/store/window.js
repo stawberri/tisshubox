@@ -68,4 +68,5 @@ module.exports = store => {
   win.on('hide', updateWindowState)
   win.on('minimize', updateWindowState)
   win.on('restore', updateWindowState)
+  updateWindowState()
 }

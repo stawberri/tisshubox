@@ -1,5 +1,5 @@
 module.exports = {
-  add(state, {post, noAlert = false}) {
+  add(state, {post}) {
     let id = post.id
     let index = state.tisshus.findIndex(tisshu => tisshu.id === id)
     if(~index) throw new Error(`post ${id} already exists`)
@@ -13,7 +13,6 @@ module.exports = {
 
     state.tisshus.splice(index, 0, {
       id, post,
-      noAlert,
       process: 0,
       download: null,
       progress: null,
