@@ -54,9 +54,6 @@ module.exports = {
         })
       }
 
-      if(!this.$store.state.window.focused)
-        c = c.map(color => color.desaturate(2))
-
       return c
     },
 
@@ -185,6 +182,20 @@ module.exports = {
       el.addEventListener('transitionend', event => {
         if(event.target === el) done()
       }, {once: true})
+    },
+
+    run(action) {
+      let actionType, template
+      if(!action.service) {
+        actionType = 'action'
+        template = this.$store.state.dataExtra.actions[action.name]
+      } else {
+        actionType = 'service action'
+        // Service template
+      }
+      if(!template) throw new Error(`unknown ${actionType} ${action.name}`)
+      let options = Object.assign({}, template.options || {}, action.options || {})
+      return template.run({options, tisshu: this.tisshu})
     }
   },
 
