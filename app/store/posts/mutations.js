@@ -14,19 +14,18 @@ module.exports = {
     state.tisshus.splice(index, 0, {
       id, post,
       noAlert,
-      process: false,
+      process: 0,
       download: null,
       progress: null,
       url: '',
       error: null,
-      ready: false,
+      ready: 0,
       type: '',
       ext: '',
       colors: null,
-      seen: false,
+      seen: 0,
       size: null,
-      data: null,
-      date: Date.now()
+      data: null
     })
 
     if(state.tisshus.length === 1) state.tisshuIndex = 0

@@ -1,21 +1,21 @@
 <template lang='pug'>
 .tisshu
   .picture(v-if='ready' :style='pictureStyle')
-  .message(v-else-if='error' :style='{color: c[1]}')
-    .icon: .fa.fa-exclamation-triangle
+  .message(v-else-if='error')
+    .icon(:style='{color: c[1]}'): .fa.fa-exclamation-triangle
     .text(:style='{color: c[4]}')
       .primary error encountered
       .secondary(:style='{color: c[3]}') {{error}}
   .message(v-else-if='tisshu.url')
-    .icon: .fa.fa-circle-o-notch.fa-spin
+    .icon(:style='{color: c[1]}'): .fa.fa-circle-o-notch.fa-spin
     .text(:style='{color: c[4]}') processing image
   .message(v-else-if='percent')
-    .icon: .fa.fa-refresh.fa-spin
+    .icon(:style='{color: c[1]}'): .fa.fa-refresh.fa-spin
     .text(:style='{color: c[4]}')
       .primary {{percent}}
       .secondary(:style='{color: c[3]}') downloading
   .message(v-else)
-    .icon: .fa.fa-cog.fa-spin
+    .icon(:style='{color: c[1]}'): .fa.fa-cog.fa-spin
     .text(:style='{color: c[4]}') beginning download
 </template>
 
@@ -64,7 +64,7 @@ module.exports = {
     seen() {
       if(this.tisshu.seen) return
       let {id} = this.tisshu
-      this.$store.commit('posts/edit', {id, data: {seen: true}})
+      this.$store.commit('posts/edit', {id, data: {seen: Date.now()}})
     }
   },
 

@@ -109,7 +109,7 @@ module.exports = {
       let {id, post} = task
       let url
       try {
-        commit('edit', {id, data: {process: true}})
+        commit('edit', {id, data: {process: Date.now()}})
 
         let data = [], attempts = 3
         do {
@@ -153,6 +153,7 @@ module.exports = {
 
   processResults({commit}, {id, data}) {
     data.colors = data.colors.map(color => chroma(color))
+    if(data.ready) data.ready = Date.now()
     commit('edit', {id, data})
   }
 }
