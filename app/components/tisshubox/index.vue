@@ -116,7 +116,7 @@ module.exports = {
     },
 
     stash() {
-      if(!this.tisshu) return
+      if(!(this.tisshu && this.tisshu.ready)) return
       let index = this.$store.state.posts.tisshuIndex
       this.animation = index === this.tisshuLength - 1 ? 'up-right' : 'up-left'
       this.colorOverride = {c: this.c.slice(), brighten: 2}
@@ -126,7 +126,7 @@ module.exports = {
     },
 
     trash() {
-      if(!this.tisshu) return
+      if(!(this.tisshu && this.tisshu.ready)) return
       let index = this.$store.state.posts.tisshuIndex
       this.animation = index === this.tisshuLength - 1 ? 'down-right' : 'down-left'
       this.colorOverride = {c: this.c.slice(), darken: 2}

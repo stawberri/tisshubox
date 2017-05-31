@@ -52,14 +52,26 @@ module.exports = vm => {
           click: () => shell.openExternal(vm.tisshu.post.url)
         },
         {
-          type: 'separator',
-          visible: process.platform !== 'darwin'
+          type: 'separator'
         },
         {
           label: 'Auto hide menu bar',
           type: 'checkbox',
           checked: vm.$store.state.data.window.autoHideMenuBar,
-          click: item => vm.$store.commit('data/window/autoHideMenuBar', {hide: item.checked})
+          visible: process.platform !== 'darwin',
+          click: item => vm.$store.commit('data/window/flag', {data: {autoHideMenuBar: item.checked}})
+        },
+        {
+          label: 'Emit new tisshu notifications',
+          type: 'checkbox',
+          checked: vm.$store.state.data.window.notifications,
+          click: item => vm.$store.commit('data/window/flag', {data: {notifications: item.checked}})
+        },
+        {
+          label: 'Flash window on new tisshu',
+          type: 'checkbox',
+          checked: vm.$store.state.data.window.flashFrame,
+          click: item => vm.$store.commit('data/window/flag', {data: {flashFrame: item.checked}})
         }
       ]
     },

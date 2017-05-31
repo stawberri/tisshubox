@@ -34,23 +34,25 @@ module.exports = vm => {
       tisshuAlert = null
     }
 
-    tisshuAlert = new Notification(
-      'New tisshu available',
-      {
-        tag: 'tisshu-alert',
-        body: oldest.title,
-        icon: oldest.url,
-        data: {
-          id: oldest.id
+    if(vm.$store.state.data.window.notifications) {
+      tisshuAlert = new Notification(
+        'New tisshu available',
+        {
+          tag: 'tisshu-alert',
+          body: oldest.title,
+          icon: oldest.url,
+          data: {
+            id: oldest.id
+          }
         }
-      }
-    )
+      )
 
-    tisshuAlert.addEventListener('click', event => {
-      win.show()
-      vm.jump(oldest.id)
-    })
+      tisshuAlert.addEventListener('click', event => {
+        win.show()
+        vm.jump(oldest.id)
+      })
+    }
 
-    win.flashFrame(true)
+    if(vm.$store.state.data.window.flashFrame) win.flashFrame(true)
   }, {immediate: true})
 }
