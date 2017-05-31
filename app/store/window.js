@@ -26,7 +26,7 @@ module.exports = store => {
         }
 
         let unseen = tisshus.filter(tisshu => tisshu.ready && !tisshu.seen).length
-        if(unseen) title = `(${unseen}) ${title}`
+        if(unseen && store.state.data.window.unseenCount) title = `(${unseen}) ${title}`
 
         return title
       }

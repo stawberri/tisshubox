@@ -72,6 +72,12 @@ module.exports = vm => {
           type: 'checkbox',
           checked: vm.$store.state.data.window.flashFrame,
           click: item => vm.$store.commit('data/window/flag', {data: {flashFrame: item.checked}})
+        },
+        {
+          label: 'Display number of unseen tisshus',
+          type: 'checkbox',
+          checked: vm.$store.state.data.window.unseenCount,
+          click: item => vm.$store.commit('data/window/flag', {data: {unseenCount: item.checked}})
         }
       ]
     },
