@@ -16,6 +16,10 @@ module.exports = store => {
     }),
 
     getters: {
+      tisshu({tisshus, tisshuIndex}) {
+        return tisshus[tisshuIndex]
+      },
+
       tisshuIds({tisshus}) {
         return tisshus.map(post => post.id)
       },

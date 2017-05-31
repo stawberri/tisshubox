@@ -122,27 +122,19 @@ module.exports = vm => {
     }, {immediate: true})
   }
 
-  vm.$watch('$store.state.posts.tisshus.length', value => {
+  vm.$watch(() => {
+    return ([
+      vm.tisshus.length > 1,
+      !!(vm.tisshu && vm.tisshu.ready)
+    ])
+  }, enable => {
     let {submenu} = menu.items[0]
     let prev = submenu.items[0]
     let next = submenu.items[1]
     let stash = submenu.items[3]
     let trash = submenu.items[4]
-    switch(value) {
-      case 0:
-        prev.enabled = next.enabled = false
-        stash.enabled = trash.enabled = false
-      break
 
-      case 1:
-        prev.enabled = next.enabled = false
-        stash.enabled = trash.enabled = true
-      break
-
-      default:
-        prev.enabled = next.enabled = true
-        stash.enabled = trash.enabled = true
-      break
-    }
+    prev.enabled = next.enabled = enable[0]
+    stash.enabled = trash.enabled = enable[1]
   }, {immediate: true})
 }

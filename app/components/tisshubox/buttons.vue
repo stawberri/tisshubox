@@ -41,7 +41,7 @@ module.exports = {
     }
   }),
 
-  props: ['c'],
+  props: ['c', 'tisshu'],
 
   computed: {
     length() {
@@ -68,12 +68,12 @@ module.exports = {
 
           case 'stash':
             color = this.c[2]
-            display = !!this.length
+            display = this.tisshu && this.tisshu.ready
           break
 
           case 'trash':
             color = this.c[3]
-            display = !!this.length
+            display = this.tisshu && this.tisshu.ready
           break
         }
 

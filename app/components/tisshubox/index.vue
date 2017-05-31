@@ -7,7 +7,7 @@
     @leave='leaveAnim'
     @after-enter='animation = "fade"'
   ): .wrapper(:key='tisshu.id' v-if='tisshu'): tisshu(:c='c')
-  buttons(:c='c' @press='handleButton')
+  buttons(:c='c' :tisshu='tisshu' @press='handleButton')
 </template>
 
 <script>
@@ -28,8 +28,7 @@ module.exports = {
     },
 
     tisshu() {
-      let {tisshuIndex} = this.$store.state.posts
-      return this.tisshus[tisshuIndex]
+      return this.$store.getters['posts/tisshu']
     },
 
     c() {
