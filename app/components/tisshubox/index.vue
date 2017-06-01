@@ -1,13 +1,13 @@
 <template lang='pug'>
-#tisshubox(:style='{background: c[0]}')
-  pagebar(:c='c' @jump='jump' :outerAnim='animation')
+#tisshubox(:style='mainStyle')
+  transition: pagebar(v-show='active' :c='c' @jump='jump' :outerAnim='animation')
   .tisshuframe: transition(
     :name='animation'
     @after-leave='colorOverride = null'
     @leave='leaveAnim'
     @after-enter='animation = "fade"'
   ): .wrapper(:key='tisshu.id' v-if='tisshu'): tisshu(:c='c')
-  buttons(:c='c' :tisshu='tisshu' @press='handleButton')
+  transition: buttons(v-show='active' :c='c' :tisshu='tisshu' @press='handleButton')
 </template>
 
 <script>
@@ -66,6 +66,25 @@ module.exports = {
 
     queueLength() {
       return this.$store.state.posts.queue.length
+    },
+
+    active() {
+      return this.$store.getters['window/active']
+    },
+
+    focused() {
+      return this.$store.state.window.focused
+    },
+
+    mainStyle() {
+      let mainStyle = {
+        background: this.c[0]
+      }
+
+      if(this.focused && !this.active)
+        mainStyle.cursor = 'none'
+
+      return mainStyle
     }
   },
 
