@@ -2,29 +2,29 @@
 .buttons
   .prev(
     :style='styles.prev'
-    @mouseenter='states.prev.hover = true'
-    @mouseleave='states.prev.hover = false'
+    @mouseenter='keepActive(true);states.prev.hover = true'
+    @mouseleave='keepActive(false);states.prev.hover = false'
     @mousedown='handleActive($event, "prev")'
     @click='$emit("press", "prev")'
   ): .fa.fa-arrow-left
   .stash(
     :style='styles.stash'
-    @mouseenter='states.stash.hover = true'
-    @mouseleave='states.stash.hover = false'
+    @mouseenter='keepActive(true);states.stash.hover = true'
+    @mouseleave='keepActive(false);states.stash.hover = false'
     @mousedown='handleActive($event, "stash")'
     @click='$emit("press", "stash")'
   ): .fa.fa-archive
   .trash(
     :style='styles.trash'
-    @mouseenter='states.trash.hover = true'
-    @mouseleave='states.trash.hover = false'
+    @mouseenter='keepActive(true);states.trash.hover = true'
+    @mouseleave='keepActive(false);states.trash.hover = false'
     @mousedown='handleActive($event, "trash")'
     @click='$emit("press", "trash")'
   ): .fa.fa-trash
   .next(
     :style='styles.next'
-    @mouseenter='states.next.hover = true'
-    @mouseleave='states.next.hover = false'
+    @mouseenter='keepActive(true);states.next.hover = true'
+    @mouseleave='keepActive(false);states.next.hover = false'
     @mousedown='handleActive($event, "next")'
     @click='$emit("press", "next")'
   ): .fa.fa-arrow-right
@@ -121,6 +121,10 @@ module.exports = {
         state.active = false
         clearInterval(interval)
       }, 100)
+    },
+
+    keepActive(enable) {
+      this.$store.commit('window/keepActive', {label: 'tisshubutton-hover', enable})
     }
   }
 }

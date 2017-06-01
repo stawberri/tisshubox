@@ -6,6 +6,8 @@ transition-group.pagebar(
   .page(
     v-for='tisshu of tisshus'
     :key='tisshu.id'
+    @mouseenter='keepActive(true)'
+    @mouseleave='keepActive(false)'
   )
     .contents(
       @click='$emit("jump", tisshu.id)'
@@ -80,6 +82,12 @@ module.exports = {
 
       if(tisshuIndex > after) return [...tisshus, ...filler]
       else return [...filler, ...tisshus]
+    }
+  },
+
+  methods: {
+    keepActive(enable) {
+      this.$store.commit('window/keepActive', {label: 'pagebar-hover', enable})
     }
   }
 }

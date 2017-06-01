@@ -56,9 +56,9 @@ module.exports = store => {
       keepActive({keepActive}, {label, enable}) {
         let index = keepActive.indexOf(label)
         if(enable) {
-          if(~index) keepActive.splice(index, 1)
-        } else {
           if(!~index) keepActive.push(label)
+        } else {
+          if(~index) keepActive.splice(index, 1)
         }
       }
     }
