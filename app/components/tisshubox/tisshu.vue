@@ -1,5 +1,6 @@
 <template lang='pug'>
 .tisshu
+  .background(v-if='ready' :style='backgroundStyle')
   .picture(v-if='ready' :style='pictureStyle')
   .message(v-else-if='error')
     .icon(:style='{color: c[1]}'): .fa.fa-exclamation-triangle
@@ -21,13 +22,9 @@
 
 <script>
 module.exports = {
-  props: ['c'],
+  props: ['c', 'tisshu'],
 
   computed: {
-    tisshu() {
-      return this.$store.state.posts.tisshus[this.$store.state.posts.tisshuIndex]
-    },
-
     pictureStyle() {
       let {tisshu} = this
 
@@ -57,6 +54,12 @@ module.exports = {
 
     focused() {
       return this.$store.state.window.focused
+    },
+
+    backgroundStyle() {
+      return {
+        backgroundImage: `url(${this.tisshu.url})`
+      }
     }
   },
 

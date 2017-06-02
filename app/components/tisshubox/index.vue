@@ -6,7 +6,7 @@
     @after-leave='colorOverride = null'
     @leave='leaveAnim'
     @after-enter='animation = "fade"'
-  ): .wrapper(:key='tisshu.id' v-if='tisshu'): tisshu(:c='c')
+  ): .wrapper(:key='tisshu.id' v-if='tisshu'): tisshu(:c='c' :tisshu='tisshu')
   transition: buttons(v-show='active' :c='c' :tisshu='tisshu' @press='handleButton')
 </template>
 
