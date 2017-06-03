@@ -78,12 +78,6 @@ module.exports = vm => {
           type: 'checkbox',
           checked: vm.$store.state.data.window.unseenCount,
           click: item => vm.$store.commit('data/window/flag', {data: {unseenCount: item.checked}})
-        },
-        {
-          label: 'Automatically hide interface',
-          type: 'checkbox',
-          checked: vm.$store.state.data.window.autohideUi,
-          click: item => vm.$store.commit('data/window/flag', {data: {autohideUi: item.checked}})
         }
       ]
     },
@@ -109,6 +103,16 @@ module.exports = vm => {
       {
         label: 'User Data Directory',
         click() {shell.openItem(app.getPath('userData'))}
+      },
+      {
+        type: 'separator'
+      },
+      {
+        label: 'Automatically hide interface',
+        sublabel: '(Causes weird UI glitches)',
+        type: 'checkbox',
+        checked: vm.$store.state.data.window.autohideUi,
+        click: item => vm.$store.commit('data/window/flag', {data: {autohideUi: item.checked}})
       }
     ]
   })
