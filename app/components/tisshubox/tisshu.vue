@@ -1,6 +1,5 @@
 <template lang='pug'>
 .tisshu
-  .background(v-if='ready' :style='backgroundStyle')
   .picture(v-if='ready' :style='pictureStyle')
   .message(v-else-if='error')
     .icon(:style='{color: c[1]}'): .fa.fa-exclamation-triangle
@@ -54,12 +53,6 @@ module.exports = {
 
     focused() {
       return this.$store.state.window.focused
-    },
-
-    backgroundStyle() {
-      return {
-        backgroundImage: `url(${this.tisshu.url})`
-      }
     }
   },
 

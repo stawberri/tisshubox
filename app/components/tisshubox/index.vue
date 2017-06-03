@@ -1,12 +1,18 @@
 <template lang='pug'>
 #tisshubox(:style='mainStyle')
   transition: pagebar(v-show='active' :c='c' @jump='jump' :outerAnim='animation')
-  .tisshuframe: transition(
-    :name='animation'
-    @after-leave='colorOverride = null'
-    @leave='leaveAnim'
-    @after-enter='animation = "fade"'
-  ): .wrapper(:key='tisshu.id' v-if='tisshu'): tisshu(:c='c' :tisshu='tisshu')
+  transition(:name='animation')
+  .tisshuframe
+    transition(:name='animation')
+      .background(:key='tisshu.id' v-if='tisshu')
+        .bg: .inner(v-if='tisshu.ready' :style='backgroundStyle')
+    transition(
+      :name='animation'
+      @after-leave='colorOverride = null'
+      @leave='leaveAnim'
+      @after-enter='animation = "fade"'
+    ): .wrapper(:key='tisshu.id' v-if='tisshu')
+      tisshu(:c='c' :tisshu='tisshu')
   transition: buttons(v-show='active' :c='c' :tisshu='tisshu' @press='handleButton')
 </template>
 
@@ -85,6 +91,12 @@ module.exports = {
         mainStyle.cursor = 'none'
 
       return mainStyle
+    },
+
+    backgroundStyle() {
+      return {
+        backgroundImage: `url(${this.tisshu.url})`
+      }
     }
   },
 
