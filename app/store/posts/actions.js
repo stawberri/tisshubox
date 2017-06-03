@@ -97,7 +97,7 @@ module.exports = {
     }
 
     async function fetch(options) {
-      await new Promise(resolve => setTimeout(resolve, 1000 + searches.length * 100))
+      await new Promise(resolve => setTimeout(resolve, 1000))
       await dispatch('fetch', Object.assign({recursive: fetchRecursive}, options))
     }
   },
