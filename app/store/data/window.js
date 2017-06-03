@@ -6,7 +6,8 @@ module.exports = store => {
       autoHideMenuBar: false,
       notifications: true,
       flashFrame: false,
-      unseenCount: true
+      unseenCount: true,
+      autohideUi: true
     }),
 
     mutations: {

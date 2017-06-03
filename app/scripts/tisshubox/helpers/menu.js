@@ -78,6 +78,12 @@ module.exports = vm => {
           type: 'checkbox',
           checked: vm.$store.state.data.window.unseenCount,
           click: item => vm.$store.commit('data/window/flag', {data: {unseenCount: item.checked}})
+        },
+        {
+          label: 'Automatically hide interface',
+          type: 'checkbox',
+          checked: vm.$store.state.data.window.autohideUi,
+          click: item => vm.$store.commit('data/window/flag', {data: {autohideUi: item.checked}})
         }
       ]
     },

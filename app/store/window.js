@@ -34,9 +34,12 @@ module.exports = store => {
         return title
       },
 
-      active(state) {
+      active(state, getters, rootState) {
         let {active, focused, keepActive} = state
-        return focused && active || !!keepActive.length
+        if(!rootState.data.window.autohideUi) return true
+        if(keepActive.length) return true
+        if(!focused) return false
+        return active
       }
     },
 
@@ -98,7 +101,6 @@ module.exports = store => {
   win.on('focus', refreshActiveTimeout)
   window.addEventListener('mousemove', refreshActiveTimeout)
   document.addEventListener('mouseleave', () => {
-    clearTimeout(activeTimeout)
     store.commit('window/state', {data: {active: false}})
   })
 }
