@@ -109,9 +109,6 @@ module.exports = vm => {
       {
         label: 'User Data Directory',
         click() {shell.openItem(app.getPath('userData'))}
-      },
-      {
-        type: 'separator'
       }
     ]
   })
