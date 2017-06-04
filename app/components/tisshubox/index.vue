@@ -1,6 +1,6 @@
 <template lang='pug'>
 #tisshubox(:style='mainStyle')
-  transition: pagebar(v-show='active' :c='c' @jump='jump' :outerAnim='animation')
+  transition: pagebar(v-if='active' :c='c' @jump='jump' :outerAnim='animation')
   transition(:name='animation')
   .tisshuframe
     transition(:name='animation')
@@ -13,7 +13,7 @@
       @after-enter='animation = "fade"'
     ): .wrapper(:key='tisshu.id' v-if='tisshu')
       tisshu(:c='c' :tisshu='tisshu')
-  transition: buttons(v-show='active' :c='c' :tisshu='tisshu' @press='handleButton')
+  transition: buttons(v-if='active' :c='c' :tisshu='tisshu' @press='handleButton')
 </template>
 
 <script>

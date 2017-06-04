@@ -103,4 +103,6 @@ module.exports = store => {
   document.addEventListener('mouseleave', () => {
     store.commit('window/state', {data: {active: false}})
   })
+  store.watch(() => store.state.data.window.autohideUi, refreshActiveTimeout)
+  refreshActiveTimeout()
 }
