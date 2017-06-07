@@ -14,14 +14,14 @@
     "type": "git",
     "url": "git+https://stawberri@github.com/stawberri/tisshubox.git"
   },
-  "author": "Pudding <aideen@aideen.pw> (https://aideen.pw/)",
+  "author": "Pudding <aideen@aideen.pw> (https://www.puddi.pw/)",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/stawberri/tisshubox/issues"
   },
   "homepage": "https://github.com/stawberri/tisshubox#readme",
   "build": {
-    "appId": "pw.aideen.tisshubox",
+    "appId": "pw.puddi.tisshubox",
     "productName": "Tisshubox",
     "files": [
       "!brunch${/*}",
