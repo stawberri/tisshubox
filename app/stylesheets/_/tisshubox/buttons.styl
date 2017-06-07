@@ -1,4 +1,4 @@
-.buttons
+& > .buttons
   display flex
   justify-content center
   align-items center
@@ -21,7 +21,7 @@
       transition-duration 0.1s
 
   .prev
-    @extend #tisshubox .buttons $button
+    @extend {selector('../ $button')}
 
     &:hover
       transform translateX(-5px)
@@ -30,7 +30,7 @@
       transform translateX(-5px) scale(0.95)
 
   .stash
-    @extend #tisshubox .buttons $button
+    @extend {selector('../ $button')}
     position relative
     bottom 6px
 
@@ -41,7 +41,7 @@
       transform translateY(-5px) scale(0.95)
 
   .trash
-    @extend #tisshubox .buttons $button
+    @extend {selector('../ $button')}
     position relative
     top 6px
 
@@ -52,7 +52,7 @@
       transform translateY(5px) scale(0.95)
 
   .next
-    @extend #tisshubox .buttons $button
+    @extend {selector('../ $button')}
 
     &:hover
       transform translateX(5px)

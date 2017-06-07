@@ -1,0 +1,66 @@
+& > .update-available
+  position absolute
+  top 0
+  right 0
+  bottom 0
+  left 0
+  z-index 3000
+  background $c0
+  overflow auto
+
+  .wrapper
+    min-width 100%
+    min-height 100%
+    display flex
+    flex-flow column
+    align-items center
+    font-size 1.25rem
+    cursor default
+    user-select none
+
+    .title
+      font-size 2em
+      margin 100px 100px 20px
+      max-width 500px
+      color $c2
+
+    .message
+      margin 20px 125px
+      max-width 450px
+      color $c4
+
+    .buttons
+      display flex
+      margin 20px 115px 100px
+      max-width 470px
+      cursor pointer
+
+      .button
+        margin 0 10px
+        padding 16px 20px
+        background $c1
+        color $c4
+        flex 1
+        display flex
+        align-items center
+        justify-content center
+        text-align center
+        transition transform @transition-duration
+
+        &.main
+          background $c3
+          color $c0
+
+        &:hover
+          transform scale(1.05)
+          transition-duration 0.2s
+
+        &:active
+          transform scale(0.95)
+          transition-duration 0.1s
+
+  &.v-leave-active
+    transition opacity @transition-duration
+
+  &.v-leave-to
+    opacity 0

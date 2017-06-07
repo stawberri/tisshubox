@@ -14,6 +14,7 @@
     ): .wrapper(:key='tisshu.id' v-if='tisshu')
       tisshu(:c='c' :tisshu='tisshu')
   transition: buttons(v-if='active' :c='c' :tisshu='tisshu' @press='handleButton')
+  update
 </template>
 
 <script>
@@ -241,7 +242,8 @@ module.exports = {
   components: {
     pagebar: require('./pagebar'),
     tisshu: require('./tisshu'),
-    buttons: require('./buttons')
+    buttons: require('./buttons'),
+    update: require('./update')
   }
 }
 </script>
